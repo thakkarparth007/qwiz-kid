@@ -12,8 +12,8 @@ var winston = require('winston');
 var config = require('./config');
 
 // qwiz-kid specific files
-var abuseFilter = require('./middleware/AbuseFilter');
 var applogger = require('./logger');
+var abuseFilter = require('./middleware/AbuseFilter');
 
 var app = express();
 

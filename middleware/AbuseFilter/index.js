@@ -13,11 +13,10 @@
 		password
 		proxy
 		ABUSE_DEFINITION	(number of requests per minute above which the IP gets marked abusive)
-
-		log - function that must be called for logging
 */
 
-var config = require('../../config.js');
+var config = require('../../config');
+var logger = require('../../logger').getLogger();
 
 // db related variables
 var MongoClient = require('mongodb').MongoClient;
@@ -31,15 +30,11 @@ var hitcounts_name = "hitcounts";
 var blocked_users_name = "blocked";
 
 // config variables
-var log = config.log;
 var isProxied = config.is_proxied;
 var ABUSE_DEFINITION = config.abuse_filter.ABUSE_DEFINITION;
 var TRAY_AGAIN_TIME = config.database.TRAY_AGAIN_TIME;
 var EXPIRE_AFTER_SECONDS = config.abuse_filter.EXPIRE_AFTER_SECONDS;
 var BLOCK_TIME = config.abuse_filter.BLOCK_TIME;
-
-// Logging function (defaults to console.log)
-var log = config.log;
 
 function prettify_date(bl_time) {
 	return Math.ceil(bl_time / 60000) + " minutes";
@@ -55,16 +50,16 @@ function init(config) {
 
 	MongoClient.connect(url, function(err, d) {
 		if(err) {
-			log("AbuseFilter:ConnectionError", err);
+			logger.error("AbuseFilter:ConnectionError", err);
 			return;
 		}
-		log("AbuseFilter: Database Connection Established");
+		logger.info("AbuseFilter: Database Connection Established");
 		db = d;
 		hitcounts = db.collection(hitcounts_name);
 		hitcounts.createIndex( { "connectionTime": 1 }, { expireAfterSeconds: EXPIRE_AFTER_SECONDS }, function() {} );
 
 		blocked_users = db.collection(blocked_users_name);
-		blocked_users.createIndex( { "blockTime": 1 }, { expireAfterSeconds: BLOCK_TIME }, function() {} )
+		blocked_users.createIndex( { "blockTime": 1 }, { expireAfterSeconds: BLOCK_TIME }, function() {} );
 	});
 }
 
@@ -92,7 +87,7 @@ function real_check_abuse(ip, cb) {
 				cb(null, { isAbusive: true, blockTime: blockReport.blockTimeLeft });
 			else
 				check_unblocked_user(ip, cb);
-		})
+		});
 	});
 }
 
@@ -109,13 +104,13 @@ function get_block_report(ip, cb) {
 			cb(err);
 		if(doc) {
 			var time_left = BLOCK_TIME - (new Date() - doc.blockTime);
-			log("%s : still %f seconds left", ip, time_left / 1000);
+			logger.debug("%s : still %f seconds left", ip, time_left / 1000);
 			if(time_left > 0)
 				cb(null, { isBlocked: true, blockTimeLeft: BLOCK_TIME - (new Date() - doc.blockTime) });
 			else {
 				blocked_users.remove({ ipAddr: ip }, function(err) {
 					if(err)
-						log("AbuseFilter:Error - Could not remove the blocked IP.");
+						logger.error("AbuseFilter:Error - Could not remove the blocked IP.");
 				});
 				cb(null, { isBlocked: false });
 			}
@@ -134,11 +129,11 @@ function check_unblocked_user(ip, cb) {
 	hitcounts.count(query, function(err, count) {
 		if(err)
 			cb(err);
-		log("%s : %d", ip, count);
+		logger.debug("%s : %d", ip, count);
 		if(count > ABUSE_DEFINITION)
-			block_user(ip, cb)
+			block_user(ip, cb);
 		else
-			cb(null, { isAbusive: false })
+			cb(null, { isAbusive: false });
 	});
 }
 
@@ -158,7 +153,7 @@ function handleRequest(req, res, next) {
 
 	check_abuse(ip, function(err, abuseReport) {
 		if(err) { 
-			log("AbuseFilter:Error", err); 
+			logger.error("AbuseFilter:Error", err); 
 			res.render('error', {
 				message: 'Internal Server Error',
 				error: {}
