@@ -7,6 +7,33 @@ module.exports =
 	"host": "localhost",
 	"port": 3000,
 
+	"logger": {
+		"development": {
+			"console": {
+				"colorize": true,
+				"timestamp": true,
+				"prettyPrint": true,
+				"level": "debug"
+			},
+			"file": {
+				"filename": './logs/qwiz-kid.log',
+				"timestamp": true,
+				"maxSize": 5242880,	// 5 MB
+				"prettyPrint": true,
+				"level": "debug"
+			}
+		},
+		"production": {
+			"file": {
+				"filename": './logs/qwiz-kid.log',
+				"timestamp": true,
+				"maxSize": 5242880,	// 5 MB
+				"prettyPrint": true,
+				"level": "debug"
+			}
+		}
+	},
+
 	// database credentials.
 	"database": {
 		"db_name": "qwiz-kid",

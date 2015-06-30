@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Signup :: Qwiz-Kid</title>
+	<style type="text/css">
+	#main {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%,-50%);
+	}
+	</style>
+</head>
+<body>
+	<header>
+		<span id="title">Qwiz-Kid</span>
+	</header>
+	<div id="main">
+		<form method="POST" action="./signup">
+			<div id="login_topbar">Signup</div>
+
+			<label for="username">Username</label>
+			<input name="username" id="username">
+			<br>
+
+			<label for="password">Password</label>
+			<input type="password" name="password" id="password">
+			<br>
+
+			<label for="cnfm_password">Confirm Password</label>
+			<input type="password" name="cnfm_password" id="cnfm_password">
+			<br>
+
+			<label for="name">Name</label>
+			<input name="name" id="name">
+			<br>
+
+			<label for="college">College</label>
+			<input name="college" id="college">
+			<br>
+
+			<label for="state">State</label>
+			<input name="state" id="state">
+			<br>
+
+			<label for="country">Country</label>
+			<input name="country" id="country">
+			<br>
+
+			<input type="submit" value="Signup" name="submit">
+			<span class="error">{{ errorMessage }}</span>
+		</form>
+	</div>
+</body>
+</html>

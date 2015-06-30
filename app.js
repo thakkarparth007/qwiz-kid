@@ -1,66 +1,58 @@
+// libraries
 var express = require('express');
+var layout = require('express-layout');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 var winston = require('winston');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-
-var abuseFilter = require('./middleware/AbuseFilter');
+// config
 var config = require('./config');
-abuseFilter.init(config);
+
+// qwiz-kid specific files
+var abuseFilter = require('./middleware/AbuseFilter');
+var applogger = require('./logger');
 
 var app = express();
+
+// init logger
+applogger.init(app);
+abuseFilter.init(config);
+
+// require routes - declared after app and applogger initialisations to
+// enable logging.
+var routes = require('./routes/index');
+var users = require('./routes/users');
+var restrict = require('./middleware/restrict');
+var login = require('./routes/login');
+
+// done requiring the files
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-// uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger(config.env));
 app.use(bodyParser.json());
+app.use(session({
+	secret: 'LOLCODEROXMENNYOYOBBZSINGHU!',
+	resave: false,
+	saveUninitialized: true
+}));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(layout());
 
+// home page to be added
 app.use('/', routes);
+app.use('/', login);
+
+// restricted pages
+app.use(restrict);
 app.use('/users', users);
-
-/*
-	Logging.
-	Use the console and the file transports in development
-	Use the file in production
- */
-var log_opts_console = {
-	colorize: true,
-	timestamp: true,
-	prettyPrint: true,
-	level: "debug"
-};
-
-var log_opts_file = {
-	filename: './logs/qwiz-kid.log',
-	timestamp: true,
-	maxSize: 5242880,	// 5 MB
-	prettyPrint: true
-};
-
-if(app.get('env') === 'development') {
-	winston.loggers.add('qwiz-kid-logger', {
-		console: log_opts_console,
-		file: log_opts_file
-	});
-}
-
-if(app.get('env') === 'production') {
-	winston.loggers.add('qwiz-kid-logger', {
-		file: log_opts_file
-	});
-}
 
 // error handlers
 

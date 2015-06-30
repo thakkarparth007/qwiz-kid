@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login :: Qwiz-Kid</title>
+	<style type="text/css">
+	#main {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%,-50%);
+	}
+	</style>
+</head>
+<body>
+	<header>
+		<span id="title">Qwiz-Kid</span>
+	</header>
+	<div id="main">
+		<form method="POST" action="./login">
+			<div id="login_topbar">Login</div>
+
+			<label for="username">Username</label>
+			<input name="username" id="username">
+			<br>
+
+			<label for="password">Password</label>
+			<input type="password" name="password" id="password">
+			<br>
+
+			<input type="submit" value="Login" name="submit">
+			<span class="error">{{ errorMessage }}</span>
+		</form>
+	</div>
+</body>
+</html>
