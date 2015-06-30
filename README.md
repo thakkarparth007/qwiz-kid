@@ -82,7 +82,7 @@ A basic quizzing platform
 
 ### <a name="routes"></a> Routes
 `/login`
-- **GET**: Returns the login page.
+- **GET**: Returns the login/signup page.
 - **POST**: Send the login credentials to login.
 	- Params:
 		- `username`
@@ -91,6 +91,28 @@ A basic quizzing platform
 ---
 `/logout`
 - **GET**: Logs out the user.
+
+---
+
+`/signup`
+- **GET**: Returns the login/signup page.
+- **POST**: Register a user.
+	- Params:
+		* username
+		* password
+		* cnfmpassword
+		* name
+		* email
+		* emailpublic		(`boolean`. Email will be publicly visible if true.)
+		* college
+		* state
+		* country
+		* score
+
+If the user account is created successfully, redirects to `/users/{username}`.
+
+Otherwise, shows the errors on the signup page.
+
 
 ---
 
@@ -112,6 +134,8 @@ A basic quizzing platform
 - **GET**: Returns user-profile.
 
 	If the `.json` is added at the end, then the returned data is in JSON format. Otherwise an html page is sent.
+
+	If the `username` is that of the currently logged in user, then returns the dashboard page.
 
 ---
 
