@@ -9,27 +9,43 @@
 
 var express = require('express');
 var router = express.Router();
-var fs = require('fs');
 var restrict = require('../middleware/restrict');
+var bcrypt = require('bcrypt');
+var db_connect = require('../db_connect');
+var setupsession = require('../middleware/setupsession');
 var logger = require('../logger').getLogger();
 
 function validateLogin(uname, pwd, cb) {
-	var logins = [
-		["Parth","password"],
-	];
-	for(var i = 0; i < logins.length; i++) {
-		if(uname == logins[i][0] && pwd == logins[i][1]) {
-			logger.info(uname,pwd,true);
-			return cb(null, { name: "Parth" });
+	var db = db_connect.reuse();
+	var users = db.collection('users');
+
+	users.findOne({
+		username: uname
+	}, function(err,user) {
+		if(err) {
+			logger.error("Error retrieiving user details from the database.", err);
+			return cb(err);
 		}
-	}
-	logger.info(uname,pwd,false);
-	cb(null, false);
+		if(!user)
+			return cb(null,false);
+
+		bcrypt.compare(pwd, user.passwordhash, function(err,same) {
+			if(err) {
+				logger.error("Error comparing passwords", err);
+				return cb(err);
+			}
+
+			if(same)
+				cb(null,user);
+			else
+				cb(null,false);
+		});
+	});
 }
 
 /* login page */
 router.get('/login', function(req, res, next) {
-	if(req.session.isLoggedIn) {
+	if(req.session.isloggedin) {
 		res.redirect('/');
 		return;
 	}
@@ -38,8 +54,9 @@ router.get('/login', function(req, res, next) {
 });
 
 router.post('/login', function(req, res) {
-	if(req.session.isLoggedIn) {
+	if(req.session.isloggedin) {
 		res.redirect('/');
+		return;
 	}
 	var uname = req.body.username,
 		pwd = req.body.password;
@@ -54,31 +71,37 @@ router.post('/login', function(req, res) {
 		errorMessages.push("Password missing.");
 	}
 	else {
-		validateLogin(uname,pwd,function(err,result) {
+		validateLogin(uname,pwd,function(err,user) {
 			if(err) {
 				logger.error(err);
-				res.render('error', {
-					message: 'Internal Server Error. Retry in a while.',
-					error: {}
+				res.status(500).end();
+			}
+			else if(user) {
+				setupsession(req,user);
+				res.status(200).json({
+					username: user.username,
+					name: user.name,
+					email: user.email,
+					emailpublic: user.emailpublic,
+					college: user.college,
+					state: user.state,
+					country: user.country,
+					score: user.score,
+					categories: user.categories,
+					joindate: user.joindate
 				});
 			}
-			else if(result) {
-				req.session.isLoggedIn = true;
-				req.session.username = uname;
-				req.session.name = result.name;
-				res.redirect('/');
-			}
 			else {
-				res.render('login', {
-					errorMessage: 'Invalid login credentials.'
+				res.status(401).json({
+					error: 'Invalid login credentials.'
 				});
 			}
 		});
 		return;
 	}
 
-	res.render('login',{
-		errorMessage: errorMessages.join("<br>")
+	res.status(401).json({
+		error: errorMessages.join("<br>")
 	});
 });
 

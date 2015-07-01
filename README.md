@@ -38,47 +38,47 @@ A basic quizzing platform
 
 ### <a name="database"></a> Database collections
 1. `users`
-	* username
+	* username			*indexed*
 	* passwordhash
 	* name
-	* email
+	* email 			*indexed*
 	* emailpublic		(`boolean`. Email will be publicly visible if true.)
 	* college
 	* state
 	* country
-	* score
+	* score 			*indexed*
 	* categories:		```[{ categoryid, corattempts, incorattempts }]```
-	* joindate:			(`UTC timestamp`)
+	* joindate:			(`UTC timestamp`) *indexed*
 2. `questions`
-	* id
+	* _id 				*indexed*
 	* categoryids:		```[]```
-	* ownerid
+	* ownerid 			*indexed*
 	* title
 	* question
 	* options:			```[]```
 	* answer
 	* explanation		(optional `text`)
 	* timelimit			(`number`. Number of seconds after which the user isn't allowed to answer. -1 if no such limit should be applied.)
-	* votes: 			```[{ username: '', type: {1 or -1}	}]```
-	* corattempts		(correct attempts : `number`)
-	* incorattempts	(incorrect attempts : `number`)
-	* createdat			(`UTC timestamp`)
-	* editedat			(`UTC timestamp`)
+	* votes: 			```[{ username: '', type: {1 or -1}	}]``` *indexed*
+	* corattempts		(correct attempts : `number`) *indexed*
+	* incorattempts	(incorrect attempts : `number`) *indexed*
+	* createdat			(`UTC timestamp`) *indexed*
+	* editedat			(`UTC timestamp`) *indexed*
 3. `categories`
-	* id
+	* _id
 	* name
 4. `answerstats`
-	* qid
-	* username			
+	* qid 				*indexed*
+	* username			*indexed*
 	* seentime			(`UTC timestamp`)
-	* answeredtime		(`UTC timestamp`. Time taken to answer (ms) = answeredtime-seentime)
-	* points			(points scored by the user who answered the question)
+	* timetoanswer 		(`Number` - seconds) *indexed*
+	* points			(points scored by the user who answered the question) *indexed*
 5. `colleges`
-	* id
+	* _id				*indexed*
 	* name
 	* city
 	* country
-	* members			(`integer`)
+	* membercount		(`integer`)
 
 ### <a name="routes"></a> Routes
 `/login`
@@ -107,7 +107,6 @@ A basic quizzing platform
 		* college
 		* state
 		* country
-		* score
 
 If the user account is created successfully, redirects to `/users/{username}`.
 
@@ -115,6 +114,11 @@ Otherwise, shows the errors on the signup page.
 
 
 ---
+
+`/`
+- **GET**: Returns the home page.
+	
+	For a logged in user, this returns the dashboard.
 
 `/users[.json]`
 - **GET**: Returns a list of users
@@ -134,9 +138,6 @@ Otherwise, shows the errors on the signup page.
 - **GET**: Returns user-profile.
 
 	If the `.json` is added at the end, then the returned data is in JSON format. Otherwise an html page is sent.
-
-	If the `username` is that of the currently logged in user, then returns the dashboard page.
-
 ---
 
 `/users/{username}/{questions}[.json]`

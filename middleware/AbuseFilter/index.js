@@ -16,7 +16,7 @@
 */
 
 var config = require('../../config');
-var logger = require('../../logger').getLogger();
+var logger = require('../../logger');
 
 // db related variables
 var MongoClient = require('mongodb').MongoClient;
@@ -41,6 +41,7 @@ function prettify_date(bl_time) {
 }
 
 function init(config) {
+	logger = logger.getLogger();
 	var url = "mongodb://";
 	if(config.database.username && config.database.password)
 		url += config.database.username + ":" + config.database.password + '@';

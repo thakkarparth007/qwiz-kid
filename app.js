@@ -27,6 +27,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var restrict = require('./middleware/restrict');
 var login = require('./routes/login');
+var signup = require('./routes/signup');
 
 // done requiring the files
 
@@ -49,6 +50,7 @@ app.use(layout());
 // home page to be added
 app.use('/', routes);
 app.use('/', login);
+app.use('/', signup);
 
 // restricted pages
 app.use(restrict);
