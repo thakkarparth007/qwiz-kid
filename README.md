@@ -49,21 +49,28 @@ A basic quizzing platform
 	* score 			*indexed*
 	* categories:		```[{ categoryid, corattempts, incorattempts }]```
 	* joindate:			(`UTC timestamp`) *indexed*
+
 2. `questions`
 	* _id 				*indexed*
-	* categoryids:		```[]```
+	* categoryids:		```[]``` *indexed*
 	* ownerid 			*indexed*
 	* title
 	* question
 	* options:			```[]```
 	* answer
 	* explanation		(optional `text`)
-	* timelimit			(`number`. Number of seconds after which the user isn't allowed to answer. -1 if no such limit should be applied.)
-	* votes: 			```[{ username: '', type: {1 or -1}	}]``` *indexed*
-	* corattempts		(correct attempts : `number`) *indexed*
-	* incorattempts	(incorrect attempts : `number`) *indexed*
+	* timelimit			(`number`. Number of seconds after which the user isn't allowed to answer. -1 if no such limit should be applied.) *indexed*
+	* fastest 			(`number`. Time taken by the fastest solver) *indexed*
+	* upvotes: 			```[ usernames ]```
+	* downvotes: 		```[ usernames ]```
+	* votecount:		(`number`) *indexed*
+	* corattempts		(correct attempts : `number`)
+	* incorattempts		(incorrect attempts : `number`)
+	* successratio 		(`number` : corattempts.len / incorattempts.len)  *indexed*
+	* awesomeness 		(`number` : a function that's yet to be decided)  *indexed*
 	* createdat			(`UTC timestamp`) *indexed*
 	* editedat			(`UTC timestamp`) *indexed*
+
 3. `categories`
 	* _id
 	* name
@@ -140,7 +147,7 @@ Otherwise, shows the errors on the signup page.
 		- `page`: Default: 1. The page number of the returned results.
 
 	Returns only `username`, `name`, `email` (if `emailpublic` is `"true"`), `emailpublic`, `college`, `state`, `country`,`score`.
-	
+
 ---
 
 `/users/{username}`
@@ -157,14 +164,23 @@ Otherwise, shows the errors on the signup page.
 
 	- Params:
 		- `view`: Default: 'html'. ('html' or 'json')
-		- `search`: A search query string.
-		- `sortby`: Default: 'createdat'. Can be 'awesomeness', 'createdat' or 'votes'.
-		- `sortord`: Default: '-1'. Can be '1' (ascending) or '-1' (descending).
+		- `solvestatus`: Default: 0. Allowed values:
+			- 0: Unattempted questions
+			- 1: Attempted wrongly
+			- 2: Solved ones
+
+		- `search`: A json object with these fields
+			- `main` 	(matches `title` or `question`)
+
+			The filtering works by "AND"ing.
+			(Only one field is involved here - `main`, but this is just to make the search queries consistent in format.)
+
+
+		- `sortby`: Default: `awesomeness`. Can be `createdat`, `timelimit`, `fastest`, `successratio` or `votecount`.
+		- `sortord`: Default: '1'. Can be '1' (ascending) or '-1' (descending).
 		- `limit`: Default: 20. Can be a positive integer less than or equal to 100.
 		- `page`: Default: 1. The page number of the returned results.
-	
-	`awesomeness` and `votes` are different. `awesomeness` is a function of various parameters including votes and difficulty. (Will be implemented later. Till then, is equal to `votes`).
-
+		
 ---
 
 `/categories[.json]`
@@ -177,18 +193,27 @@ Otherwise, shows the errors on the signup page.
 ---
 `/questions[.json]`
 
-- **GET**: Returns a list of questions (only `id`, `categoryids`, `ownerid`, `title`, `timelimit`, `votecount`, `corrattempts`, `incorattempts`, `createdat`, `editedat` are sent).
+- **GET**: Returns a list of questions (only `id`, `categoryids`, `ownerid`, `title`, `timelimit`, `fastest`, `upvotecount`, `downvotecount`, `corrattempts`, `incorattempts`, `createdat`, `editedat` are sent)
 
 	- Params:
 		- `view`: Default: 'html'. ('html' or 'json')
-		- `search`: A search query string.
-		- `sortby`: Default: 'createdat'. Can be 'awesomeness', 'createdat' or 'votes'.
-		- `sortord`: Default: '-1'. Can be '1' (ascending) or '-1' (descending).
+		- `solvestatus`: Default: 0. Allowed values:
+			- 0: Unattempted questions
+			- 1: Attempted wrongly
+			- 2: Solved ones
+
+		- `search`: A json object with these fields
+			- `main` 	(matches `title` or `question`)
+
+			The filtering works by "AND"ing.
+			(Only one field is involved here - `main`, but this is just to make the search queries consistent in format.)
+
+
+		- `sortby`: Default: `awesomeness`. Can be `createdat`, `timelimit`, `fastest`, `successratio` or `votecount`.
+		- `sortord`: Default: '1'. Can be '1' (ascending) or '-1' (descending).
 		- `limit`: Default: 20. Can be a positive integer less than or equal to 100.
 		- `page`: Default: 1. The page number of the returned results.
 		
-	`awesomeness` and `votes` are different. `awesomeness` is a function of various parameters including votes and difficulty. (Will be implemented later. Till then, is equal to `votes`).
-
 - **POST**: To submit a question.
 	- Params:
 		- `categories`	(**required**. Array of strings)
