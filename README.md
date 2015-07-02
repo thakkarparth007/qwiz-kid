@@ -128,18 +128,19 @@ Otherwise, shows the errors on the signup page.
 		- `search`: A json object with these fields
 			- `main`	(matches either name or username)
 			- `email`
-			- 'college'
-			- 'state'
-			- 'country'
+			- `college`
+			- `state`
+			- `country`
 
 			The filtering works by "AND"ing.
-		
+
 		- `sortby`: Default: 'score'. Can be 'college', 'state', 'country', 'score' or 'joindate'.
 		- `sortord`: Default: '-1'. Can be '1' (ascending) or '-1' (descending).
 		- `limit`: Default: 20. Can be a positive integer less than or equal to 100, and greater than or equal to 10.
 		- `page`: Default: 1. The page number of the returned results.
 
 	Returns only `username`, `name`, `email` (if `emailpublic` is `"true"`), `emailpublic`, `college`, `state`, `country`,`score`.
+	
 ---
 
 `/users/{username}`
