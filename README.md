@@ -40,7 +40,7 @@ A basic quizzing platform
 1. `users`
 	* username			*indexed*
 	* passwordhash
-	* name
+	* name 				*indexed*
 	* email 			*indexed*
 	* emailpublic		(`boolean`. Email will be publicly visible if true.)
 	* college
@@ -120,38 +120,72 @@ Otherwise, shows the errors on the signup page.
 	
 	For a logged in user, this returns the dashboard.
 
-`/users[.json]`
+`/users`
 - **GET**: Returns a list of users
 
-	If the `.json` is added at the end, then the returned data is in JSON format. Otherwise an html page is sent.
-
 	- Params:
-		- `search`: A search query string.
+		- `view`: Default: 'html'. ('html' or 'json')
+		- `search`: A json object with these fields
+			- `main`	(matches either name or username)
+			- `email`
+			- 'college'
+			- 'state'
+			- 'country'
+
+			The filtering works by "AND"ing.
+		
 		- `sortby`: Default: 'score'. Can be 'college', 'state', 'country', 'score' or 'joindate'.
 		- `sortord`: Default: '-1'. Can be '1' (ascending) or '-1' (descending).
-		- `limit`: Default: 20. Can be a positive integer less than or equal to 100.
+		- `limit`: Default: 20. Can be a positive integer less than or equal to 100, and greater than or equal to 10.
 		- `page`: Default: 1. The page number of the returned results.
 
+	Returns only `username`, `name`, `email` (if `emailpublic` is `"true"`), `emailpublic`, `college`, `state`, `country`,`score`.
 ---
 
-`/users/{username}[.json]`
+`/users/{username}`
 - **GET**: Returns user-profile.
 
-	If the `.json` is added at the end, then the returned data is in JSON format. Otherwise an html page is sent.
+	- Params:
+		- `view`: Default: 'html'. ('html' or 'json')
+
 ---
 
-`/users/{username}/{questions}[.json]`
+`/users/{username}/{questions}`
 
 - **GET**: Returns the questions set by the user (only appropriate fields are sent - see `/questions`).
 
-	If the `.json` is added at the end, then the returned data is in JSON format. Otherwise an html page is sent.
 	- Params:
+		- `view`: Default: 'html'. ('html' or 'json')
 		- `search`: A search query string.
 		- `sortby`: Default: 'createdat'. Can be 'awesomeness', 'createdat' or 'votes'.
 		- `sortord`: Default: '-1'. Can be '1' (ascending) or '-1' (descending).
 		- `limit`: Default: 20. Can be a positive integer less than or equal to 100.
 		- `page`: Default: 1. The page number of the returned results.
 	
+	`awesomeness` and `votes` are different. `awesomeness` is a function of various parameters including votes and difficulty. (Will be implemented later. Till then, is equal to `votes`).
+
+---
+
+`/categories[.json]`
+
+- **GET**: Returns a list of categories and the number of questions in each category.
+
+	- Params:
+		- `view`: Default: 'html'. ('html' or 'json')
+
+---
+`/questions[.json]`
+
+- **GET**: Returns a list of questions (only `id`, `categoryids`, `ownerid`, `title`, `timelimit`, `votecount`, `corrattempts`, `incorattempts`, `createdat`, `editedat` are sent).
+
+	- Params:
+		- `view`: Default: 'html'. ('html' or 'json')
+		- `search`: A search query string.
+		- `sortby`: Default: 'createdat'. Can be 'awesomeness', 'createdat' or 'votes'.
+		- `sortord`: Default: '-1'. Can be '1' (ascending) or '-1' (descending).
+		- `limit`: Default: 20. Can be a positive integer less than or equal to 100.
+		- `page`: Default: 1. The page number of the returned results.
+		
 	`awesomeness` and `votes` are different. `awesomeness` is a function of various parameters including votes and difficulty. (Will be implemented later. Till then, is equal to `votes`).
 
 - **POST**: To submit a question.
@@ -163,34 +197,15 @@ Otherwise, shows the errors on the signup page.
 		- `answer`		(**required**. Either of 1,2,3 or 4)
 		- `explanation`	(*optional*. A brief explanation about the answer)
 
----
-
-`/categories[.json]`
-
-- **GET**: Returns a list of categories and the number of questions in each category.
-
-	If the `.json` is added at the end, then the returned data is in JSON format. Otherwise an html page is sent.
-
----
-`/questions[.json]`
-
-- **GET**: Returns a list of questions (only `id`, `categoryids`, `ownerid`, `title`, `timelimit`, `votecount`, `corrattempts`, `incorattempts`, `createdat`, `editedat` are sent).
-
-	If the `.json` is added at the end, then the returned data is in JSON format. Otherwise an html page is sent.
-	- Params:
-		- `search`: A search query string.
-		- `sortby`: Default: 'createdat'. Can be 'awesomeness', 'createdat' or 'votes'.
-		- `sortord`: Default: '-1'. Can be '1' (ascending) or '-1' (descending).
-		- `limit`: Default: 20. Can be a positive integer less than or equal to 100.
-		- `page`: Default: 1. The page number of the returned results.
-		
-	`awesomeness` and `votes` are different. `awesomeness` is a function of various parameters including votes and difficulty. (Will be implemented later. Till then, is equal to `votes`).
 
 ---
 
-`/questions/{qid}[.json]`
+`/questions/{qid}`
 
 - **GET**: Returns the question with `id` = `qid`. Returns (`id`, `categoryids`, `ownerid`, `title`, `question`, `options`, `timelimit`, `votecount`, `corrattempts`, `incorattempts`, `createdat`, `editedat`). Note that the server will not give points to answers submitted after `timelimit` seconds (if `timelimit != -1`). Hence, the answers must be submitted *quickly*.
+
+	- Params:
+		- `view`: Default: 'html'. ('html' or 'json')
 
 - **POST**: Submit the answer to the question. 
 

@@ -9,6 +9,42 @@ module.exports =
 
 	"BCRYPT_ROUNDS": 8,
 
+	"validation": {
+		// so far only the max/min string lengths are defined here.
+		
+		// ----------- users --------------
+		// username
+		"MAX_USERNAME_LENGTH": 20,
+
+		// password
+		"MIN_PASSWORD_LEN": 8,
+		"MAX_PASSWORD_LEN": 25,
+
+		// email
+		// nothing
+		
+		// college
+		"MAX_COLLEGE_LENGTH": 100,
+
+		// state
+		"MAX_STATE_LENGTH": 40,
+
+		// country
+		"MAX_COUNTRY_LENGTH": 40,
+
+		// ----------- questions --------------
+		// title
+		
+		// question
+		
+		// options
+		
+		// explanation
+		
+		// ----------- categories -------------
+		// name
+	},
+
 	"logger": {
 		"development": {
 			"console": {

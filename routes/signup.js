@@ -23,11 +23,13 @@ function validate_username(uname) {
 	if(!uname)
 		return Promise.resolve("Username is required.");
 
-	if(uname.length > 20)
-		return Promise.resolve("Username should be no longer than 20 characters.");
+	if(uname.length > config.validation.MAX_USERNAME_LENGTH)
+		return Promise.resolve("Username should be no longer than" 
+			+ config.validation.MAX_USERNAME_LENGTH + " characters.");
 
 	if(!/^[a-z0-9\.-_]+$/i.test(uname))
-		return Promise.resolve("Username can contain only letters, numbers, underscore, periods and hyphens.");
+		return Promise.resolve("Username can contain only letters, numbers, "
+			+ "underscore, periods and hyphens.");
 
 	return new Promise(function(resolve,reject) {
 		var db = db_connect.reuse();
@@ -50,11 +52,13 @@ function validate_password(pwd) {
 	if(!pwd)
 		return Promise.resolve("Password is required.");
 
-	if(pwd.length < 8)
-		return Promise.resolve("Password is too short. It must be at least 8 characters long.");
+	if(pwd.length < config.validation.MIN_PASSWORD_LENGTH)
+		return Promise.resolve("Password is too short. It must be at least " 
+			+ config.validation.MIN_PASSWORD_LENGTH +" characters long.");
 
-	if(pwd.length > 25)
-		return Promise.resolve("Passwords can't be longer than 25 characters.");
+	if(pwd.length > config.validation.MAX_PASSWORD_LENGTH)
+		return Promise.resolve("Passwords can't be longer than "
+			+ config.validation.MAX_PASSWORD_LENGTH + " characters.");
 
 	// password strength check maybe?
 	
@@ -70,12 +74,8 @@ function validate_passwords(pwd, cnfm) {
 }
 
 function validate_name(name) {
-	if(name.length > 30)
+	if(name.length > config.validation.MAX_NAME_LENGTH)
 		return Promise.resolve("That seems too long to be a real name.");
-
-	// a name like O' Connel has apostrophes
-	if(!/^[a-z' ]+$/i.test(name))
-		return Promise.resolve("Please enter your real name.");
 
 	return Promise.resolve();
 }
@@ -109,7 +109,7 @@ function validate_emailpublic(emailpublic) {
 }
 
 function validate_college(college) {
-	if(college.length > 70)
+	if(college.length > config.validation.MAX_COLLEGE_LENGTH)
 		return Promise.resolve("College name seems too long to be real.");
 
 	// database check maybe?
@@ -118,7 +118,7 @@ function validate_college(college) {
 }
 
 function validate_state(state) {
-	if(state.length > 30)
+	if(state.length > config.validation.MAX_STATE_LENGTH)
 		return Promise.resolve("State name seems too long to be real.");
 
 	if(!/^[a-z-' ]+$/i.test(state))
@@ -129,7 +129,7 @@ function validate_state(state) {
 }
 
 function validate_country(country) {
-	if(country.length > 30)
+	if(country.length > config.validation.MAX_COUNTRY_LENGTH)
 		return Promise.resolve("Country name seems too long to be real.");
 
 	if(!/^[a-z-' ]+$/i.test(country))

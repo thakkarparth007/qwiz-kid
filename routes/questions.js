@@ -6,10 +6,10 @@ var config = require('../config');
 var util = require('./util');
 var validator = require('validator');
 
-/* GET users listing. */
+/* GET questions listing. */
 router.get('/', function(req, res) {
 	var db = db_connect.reuse();
-	var users = db.collection('users');
+	var users = db.collection('questions');
 	var Q = req.query;
 
 	// filter paramaters - use defaults if clean_*() fail
@@ -21,7 +21,6 @@ router.get('/', function(req, res) {
 	var limit 	= util.clean_limit(Q.limit) || 20;
 	var page 	= util.clean_page(Q.page) || 1;
 
-	//console.log(sortby, sortord);
 	var sort = {};
 	sort[sortby] = sortord;
 

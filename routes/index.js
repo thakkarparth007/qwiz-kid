@@ -10,6 +10,7 @@ router.get('/', function(req, res, next) {
 		});
 	}
 	else {
+		res.set('Cache-Control', 'no-cache, max-age=0, must-revalidate, no-store');
 		res.render('index', { title: 'Express' });
 	}
 });
