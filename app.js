@@ -28,6 +28,7 @@ var users = require('./routes/users');
 var restrict = require('./middleware/restrict');
 var login = require('./routes/login');
 var signup = require('./routes/signup');
+var questions = require('./routes/questions');
 
 // done requiring the files
 
@@ -55,6 +56,7 @@ app.use('/', signup);
 // restricted pages
 app.use(restrict);
 app.use('/users', users);
+app.use('/questions', questions);
 
 // error handlers
 

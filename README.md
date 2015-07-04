@@ -55,31 +55,34 @@ A basic quizzing platform
 	* categoryids:		```[]``` *indexed*
 	* ownerid 			*indexed*
 	* title
-	* question
+	* question 			*text index*
 	* options:			```[]```
 	* answer
 	* explanation		(optional `text`)
-	* timelimit			(`number`. Number of seconds after which the user isn't allowed to answer. -1 if no such limit should be applied.) *indexed*
-	* fastest 			(`number`. Time taken by the fastest solver) *indexed*
-	* upvotes: 			```[ usernames ]```
-	* downvotes: 		```[ usernames ]```
+	* timelimit			(`number`. Number of seconds after which the user isn't allowed to answer. Infinity if no such limit should be applied.) *indexed*
+	* fastest 			(`number`. Time taken by the fastest solver. null if no one solved so far)       *indexed*
+	* upvotes: 			```[ [ usernames, 1/-1] ]```
+	* downvotes: 		```[ [ usernames, 1/-1] ]```
 	* votecount:		(`number`) *indexed*
 	* corattempts		(correct attempts : `number`)
 	* incorattempts		(incorrect attempts : `number`)
-	* successratio 		(`number` : corattempts.len / incorattempts.len)  *indexed*
-	* awesomeness 		(`number` : a function that's yet to be decided)  *indexed*
+	* successratio 		(`number` : corattempts.len / incorattempts.len)   *indexed*
+	* awesomeness 		(`number` : a function that's yet to be decided)   *indexed*
 	* createdat			(`UTC timestamp`) *indexed*
 	* editedat			(`UTC timestamp`) *indexed*
 
 3. `categories`
 	* _id
 	* name
+
 4. `answerstats`
 	* qid 				*indexed*
 	* username			*indexed*
 	* seentime			(`UTC timestamp`)
-	* timetoanswer 		(`Number` - seconds) *indexed*
+	* timetoanswer 		(`Number` - seconds: -1 if timeout/gaveup/wrong answer) *indexed*
 	* points			(points scored by the user who answered the question) *indexed*
+	* attempt 			(`Number` - the option chosen by the user. -1 if the user chooses to not answer. 0 if timeout. null if not answered yet.)
+
 5. `colleges`
 	* _id				*indexed*
 	* name
@@ -164,10 +167,9 @@ Otherwise, shows the errors on the signup page.
 
 	- Params:
 		- `view`: Default: 'html'. ('html' or 'json')
-		- `solvestatus`: Default: 0. Allowed values:
-			- 0: Unattempted questions
-			- 1: Attempted wrongly
-			- 2: Solved ones
+		- `seen`: Default: 0. Allowed values:
+			- 0: Unseen questions
+			- 1: Seen questions
 
 		- `search`: A json object with these fields
 			- `main` 	(matches `title` or `question`)
@@ -197,10 +199,9 @@ Otherwise, shows the errors on the signup page.
 
 	- Params:
 		- `view`: Default: 'html'. ('html' or 'json')
-		- `solvestatus`: Default: 0. Allowed values:
-			- 0: Unattempted questions
-			- 1: Attempted wrongly
-			- 2: Solved ones
+		- `seen`: Default: 0. Allowed values:
+			- 0: Unseen questions
+			- 1: Seen
 
 		- `search`: A json object with these fields
 			- `main` 	(matches `title` or `question`)
@@ -210,15 +211,15 @@ Otherwise, shows the errors on the signup page.
 
 
 		- `sortby`: Default: `awesomeness`. Can be `createdat`, `timelimit`, `fastest`, `successratio` or `votecount`.
-		- `sortord`: Default: '1'. Can be '1' (ascending) or '-1' (descending).
+		- `sortord`: Default: '-1'. Can be '1' (ascending) or '-1' (descending).
 		- `limit`: Default: 20. Can be a positive integer less than or equal to 100.
 		- `page`: Default: 1. The page number of the returned results.
 		
 - **POST**: To submit a question.
 	- Params:
 		- `categories`	(**required**. Array of strings)
-		- `title`			(**required**. String)
-		- `question`		(**required**. String)
+		- `title`		(**required**. String)
+		- `question`	(**required**. String)
 		- `options`		(**required**. Array of 4 strings)
 		- `answer`		(**required**. Either of 1,2,3 or 4)
 		- `explanation`	(*optional*. A brief explanation about the answer)
@@ -228,10 +229,19 @@ Otherwise, shows the errors on the signup page.
 
 `/questions/{qid}`
 
-- **GET**: Returns the question with `id` = `qid`. Returns (`id`, `categoryids`, `ownerid`, `title`, `question`, `options`, `timelimit`, `votecount`, `corrattempts`, `incorattempts`, `createdat`, `editedat`). Note that the server will not give points to answers submitted after `timelimit` seconds (if `timelimit != -1`). Hence, the answers must be submitted *quickly*.
+- **POST**: Returns the question with `id` = `qid`. Returns (`_id`, `categoryids`, `ownerid`, `title`, `question`, `options`, `timelimit`, `fastest`, `upvotecount`, `downvotecount`, `corrattempts`, `incorattempts`, `createdat`, `editedat`). Note that the server will not give points to answers submitted after `timelimit` seconds (if `timelimit != -1`). Hence, the answers must be submitted *quickly*.
 
-	- Params:
+	If the question has already been attempted by the person, then the server also returns the `answer`, `explanation` and the attempt details (`attempt` - the option chosen by the user, `seentime` - the time when the user saw the question, `duration` - the number of seconds taken by the user to answer)
+
+	- Params (QueryString):
 		- `view`: Default: 'html'. ('html' or 'json')
+
+	Returns the question either in the html format or json.
+	The timer for the question starts.
+
+---
+
+`/questions/{qid}/submit`
 
 - **POST**: Submit the answer to the question. 
 

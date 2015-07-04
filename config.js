@@ -45,6 +45,20 @@ module.exports =
 		// name
 	},
 
+	"questions": {
+		"MAX_TITLE_LENGTH": 200,
+
+		"MAX_QUESTION_LENGTH": 1500,
+
+		"MAX_CATEGORIES": 5,
+
+		"MAX_EXPLANATION_LENGTH": 1500,
+
+		"MIN_TIMELIMIT": 60,
+
+		"MAX_TIMELIMIT": 180,
+	},
+
 	"logger": {
 		"development": {
 			"console": {

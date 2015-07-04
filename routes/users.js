@@ -120,7 +120,7 @@ router.get('/:username', function(req, res) {
 	}
 
 	users.findOne({
-		username: req.params.username
+		username: username
 	}, function(err, user) {
 		if(err) {
 			logger.error("Error retrieving the user data from the database", err);
