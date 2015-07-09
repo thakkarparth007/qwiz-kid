@@ -1,0 +1,28 @@
+<tr>
+	<td class="question-title">
+		<a href="/questions/{{_id}}">{{title}}</a>
+	</td>
+	<td class="votes">
+		<span>{{votecount}}</span>
+	</td>
+	<td class="success-ratio">
+		<span>{{ successratio }}</span>
+	</td>
+	<td class="fastest">
+		<span>
+			{{#if fastest }} 
+				{{ fastest }}
+			{{else}}
+				N/A
+			{{/if}}
+		</span>
+	</td>
+	<td class="question-setter">
+		<a href="/users/{{ownerid}}">{{ownerid}}</a>
+	</td>
+	<td class="categories">
+		{{#each categories}}
+			<a href="/categories/{{this.id}}">{{this.name}}</a>
+		{{/each}}
+	</td>
+</tr>

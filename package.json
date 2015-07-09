@@ -5,8 +5,8 @@
   "scripts": {
     "postinstall": "./scripts/postinstall.sh",
     "build": "npm run build:js",
-    "build:js": "./scripts/buildjs.sh",
-    "prerun": "npm run build:js",
+    "build:js": "bash ./scripts/buildjs.sh",
+    "prestart": "npm run build",
     "start": "node --harmony ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

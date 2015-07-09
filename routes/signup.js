@@ -238,7 +238,7 @@ router.post('/signup', function(req, res) {
 		}
 		
 		if(errors) {
-			res.status(400).json({ error: errorMessages });
+			res.render('signup', { error: errorMessages });
 			return;
 		}
 		
@@ -246,7 +246,7 @@ router.post('/signup', function(req, res) {
 		register(username,password,name,email,emailpublic,college,state,country)
 			.then(function(user) { 
 				setupsession(req,user);
-				res.status(201).end();
+				res.redirect('/');
 			})
 			.catch(function(err) {
 				logger.error('Error in registering user.', err);

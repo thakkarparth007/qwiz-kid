@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>QwizKid | {{username}}</title>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+</head>
+<body>
+	<header>
+		<div id="logo" class="no-select">QwizKid</div>
+		<nav>
+			<a href="#" id="a-questions" class="transition">Questions</a>
+			<a href="#" id="a-users" class="transition">Users</a>
+			<a href="#" id="a-ask" class="transition selected">Ask</a>
+			<a href="#" id="a-leaderboard" class="transition">Leaderboard</a>
+		</nav>
+		<span id="my-score">{{score}}</span>
+		<a href="#" id="a-account" class="transition">{{username}}</a>
+		<div class="menu-drop-down">
+			
+			<a href="/logout">Logout</a>
+		</div>
+	</header>
+
+	<div id="main-wrapper">
+		<div id="page-ask" class="main transition-children">
+			<form>
+				<div id="top-bar">
+					<div class="question-title-wrapper">
+						<input type="text" name="title" id="txt-question-title" placeholder="Title of the question..."> 
+						<input type="button" id="btn-question-save" value="Save!" disabled="true">
+					</div>
+
+					<div id="correct-answer-wrapper">
+						<span>Correct Answer</span>
+						<div id="answer-choices-container">
+							<span id="correct-answer">A</span>
+							<div id="answers-drop-down">
+								<div id="option-a">A</div>
+								<div id="option-b">B</div>
+								<div id="option-c">C</div>
+								<div id="option-d">D</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="time-limit-wrapper">
+						<span>Time Limit</span>
+						<input type="number" id="txt-time-limit" placeholder="None">
+					</div>
+				</div>
+
+				<div id="page-content">
+					<div class="pane">
+						<div id="question-wrapper">
+							<label for="txt-question">Question</label>
+							<textarea id="txt-question" name="question" placeholder="Type your question here..."></textarea>
+						</div>
+
+						<div id="options-wrapper">
+							<div class="option-wrapper">
+								<label for="option1">A</label>
+								<input type="text" id="option1" name="option1" placeholder="Option 1">
+							</div>
+
+							<div class="option-wrapper">
+								<label for="option1">B</label>
+								<input type="text" id="option2" name="option2" placeholder="Option 2">
+							</div>
+
+							<div class="option-wrapper">
+								<label for="option1">C</label>
+								<input type="text" id="option3" name="option3" placeholder="Option 3">
+							</div>
+
+							<div class="option-wrapper">
+								<label for="option1">D</label>
+								<input type="text" id="option4" name="option4" placeholder="Option 4">
+							</div>
+						</div>
+					</div>
+
+					<div class="pane">
+						<div id="explanation-wrapper">
+							<label for="txt-explanation">Explanation</label>
+							<textarea placeholder="Type your explanation here..." id="txt-explanation" name="explanation"></textarea>
+						</div>
+
+						<div id="categories-wrapper">
+							<label for="txt-categories">Categories</label>
+							<input type="text" id="txt-categories" name="categories" placeholder="Add categories...">
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="/javascripts/jquery-1.11.3.js"></script>
+	<script type="text/javascript" src="/javascripts/underscore.js"></script>
+	<script type="text/javascript" src="/javascripts/handlebars-v3.0.3.js"></script>
+	<script type="text/javascript" src="/javascripts/handlebars.templates.js"></script>
+	<script type="text/javascript" src="/javascripts/backbone.js"></script>
+	<script type="text/javascript" src="/javascripts/pages/questions.js"></script>
+	<script type="text/javascript" src="/javascripts/main.js"></script>
+</body>
+</html>

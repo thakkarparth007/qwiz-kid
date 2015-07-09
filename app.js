@@ -55,8 +55,15 @@ app.use('/', signup);
 
 // restricted pages
 app.use(restrict);
-app.use('/users', users);
-app.use('/questions', questions);
+app.use('/ajax/users', users);
+app.use('/ajax/questions', questions);
+
+app.use('/home(/*)?', function(req,res) {
+	res.render('dashboard', { 
+		username: req.session.username, 
+		name: req.session.name 
+	});
+});
 
 // error handlers
 

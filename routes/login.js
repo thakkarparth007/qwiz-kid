@@ -46,7 +46,7 @@ function validateLogin(uname, pwd, cb) {
 /* login page */
 router.get('/login', function(req, res, next) {
 	if(req.session.isloggedin) {
-		res.redirect('/');
+		res.redirect('/home');
 		return;
 	}
 	res.set('Cache-Control', 'no-cache, max-age=0, must-revalidate, no-store');
@@ -55,7 +55,7 @@ router.get('/login', function(req, res, next) {
 
 router.post('/login', function(req, res) {
 	if(req.session.isloggedin) {
-		res.redirect('/');
+		res.redirect('/home');
 		return;
 	}
 	var uname = req.body.username,
@@ -78,7 +78,8 @@ router.post('/login', function(req, res) {
 			}
 			else if(user) {
 				setupsession(req,user);
-				res.status(200).json({
+				res.redirect('/home');
+				/*res.status(200).json({
 					username: user.username,
 					name: user.name,
 					email: user.email,
@@ -89,10 +90,10 @@ router.post('/login', function(req, res) {
 					score: user.score,
 					categories: user.categories,
 					joindate: user.joindate
-				});
+				});*/
 			}
 			else {
-				res.status(401).json({
+				res.render('login', {
 					error: 'Invalid login credentials.'
 				});
 			}
@@ -100,8 +101,8 @@ router.post('/login', function(req, res) {
 		return;
 	}
 
-	res.status(401).json({
-		error: errorMessages.join("<br>")
+	res.render('login', {
+		error: 'Invalid login credentials.'
 	});
 });
 

@@ -161,30 +161,6 @@ Otherwise, shows the errors on the signup page.
 
 ---
 
-`/users/{username}/{questions}`
-
-- **GET**: Returns the questions set by the user (only appropriate fields are sent - see `/questions`).
-
-	- Params:
-		- `view`: Default: 'html'. ('html' or 'json')
-		- `seen`: Default: 0. Allowed values:
-			- 0: Unseen questions
-			- 1: Seen questions
-
-		- `search`: A json object with these fields
-			- `main` 	(matches `title` or `question`)
-
-			The filtering works by "AND"ing.
-			(Only one field is involved here - `main`, but this is just to make the search queries consistent in format.)
-
-
-		- `sortby`: Default: `awesomeness`. Can be `createdat`, `timelimit`, `fastest`, `successratio` or `votecount`.
-		- `sortord`: Default: '1'. Can be '1' (ascending) or '-1' (descending).
-		- `limit`: Default: 20. Can be a positive integer less than or equal to 100.
-		- `page`: Default: 1. The page number of the returned results.
-		
----
-
 `/categories[.json]`
 
 - **GET**: Returns a list of categories and the number of questions in each category.
@@ -195,7 +171,7 @@ Otherwise, shows the errors on the signup page.
 ---
 `/questions[.json]`
 
-- **GET**: Returns a list of questions (only `id`, `categoryids`, `ownerid`, `title`, `timelimit`, `fastest`, `upvotecount`, `downvotecount`, `corrattempts`, `incorattempts`, `createdat`, `editedat` are sent)
+- **GET**: Returns a list of questions (only `id`, `categoryids`, `ownerid`, `title`, `timelimit`, `fastest`, `upvotecount`, `downvotecount`, `corrattempts`, `incorattempts`, `successratio`, `createdat`, `editedat` are sent)
 
 	- Params:
 		- `view`: Default: 'html'. ('html' or 'json')
@@ -208,6 +184,8 @@ Otherwise, shows the errors on the signup page.
 
 			The filtering works by "AND"ing.
 			(Only one field is involved here - `main`, but this is just to make the search queries consistent in format.)
+
+		- `ownerid`
 
 
 		- `sortby`: Default: `awesomeness`. Can be `createdat`, `timelimit`, `fastest`, `successratio` or `votecount`.

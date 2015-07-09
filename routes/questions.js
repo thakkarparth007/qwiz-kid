@@ -164,6 +164,7 @@ function search(username, query, seen, sortby, sortord, limit, page) {
 					//downvotecount: 1,
 					corrattempts: 1,
 					incorrattempts: 1,
+					successratio: 1,
 					createdat: 1,
 					editedat: 1
 				})
@@ -963,8 +964,11 @@ router.post('/', function(req,res) {
 		});
 });
 
-router.get('/create', function(req, res) {
-	res.render('submitquestion');
+router.get('/ask', function(req, res) {
+	res.render('tmp-ask', { 
+		username: req.session.username, 
+		name: req.session.name 
+	});
 });
 
 module.exports = router;
