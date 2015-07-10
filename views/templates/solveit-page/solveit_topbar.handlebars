@@ -1,0 +1,25 @@
+<div class="question-title">
+	<strong>Title</strong>: 
+	<span class="value">{{title}}</span>
+
+	{{#if attempt}}
+		<span class="question-attempted">{{attempt}}</span>
+	{{/if}}
+</div>
+
+<div class="question-setter">
+	<strong>Setter</strong>: 
+	<span class="value">{{ownerid}}</span>
+</div>
+
+<div class="question-time-limit">
+	<strong>Time Limit</strong>:
+
+	<span class="value">
+	{{#if timelimit}} 
+		{{timelimit}}
+	{{else}}
+		None
+	{{/if}}
+	</span>
+</div>

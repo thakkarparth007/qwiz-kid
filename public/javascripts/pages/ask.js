@@ -124,7 +124,7 @@ var QuestionModel = Backbone.Model.extend({
 		for(var i = 0; i < categories.length; i++) {
 			categories[i] = categories[i].trim();
 
-			if(QK.Collections.Categories.where({_id: categories[i]}) === null) {
+			if(QK.Collections.Categories.where({_id: categories[i]}).length === 0) {
 				return (new BadParameterError("categories", "Invalid category " +
 					"ids provided."));
 			}
@@ -399,6 +399,7 @@ var AskPage = Backbone.View.extend({
 	render: function() {
 		this.setElement(document.body);
 
+		$("[id*=tooltipsy]").remove();
 		$("nav a").removeClass("selected");
 		$("#a-ask").addClass("selected");
 		$(".main").attr('id', 'page-ask');

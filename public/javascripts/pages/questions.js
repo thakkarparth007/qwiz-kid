@@ -14,7 +14,8 @@ var QuestionModel = Backbone.Model.extend({
 });
 
 var QuestionsCollection = Backbone.Collection.extend({
-	url: '/ajax/questions?view=json'
+	url: '/ajax/questions?view=json',
+	model: QuestionModel
 });
 
 var QuestionsPage = Backbone.View.extend({
@@ -37,11 +38,18 @@ var QuestionsPage = Backbone.View.extend({
 		// handle() is called by the main Router.
 		
 		this.listenTo(this.collection, 'add', this.addQuestion);
+		this.listenTo(this.collection, 'reset', this.resetView);
 		this.listenTo(this.collection, 'error', this.error);
 	},
 	handle: function() {
-		this.collection.fetch();
+		if(!this.collection.length)
+			this.collection.fetch({reset: true});
+
 		this.render();
+		this.resetView();
+	},
+	resetView: function() {
+		this.collection.forEach(this.addQuestion,this);
 	},
 	addQuestion: function(q) {
 		$("#tbl-questions-header").after( this.questionTmpl(q.toJSON()) );
@@ -53,6 +61,7 @@ var QuestionsPage = Backbone.View.extend({
 	render: function() {
 		this.setElement(document.body);
 
+		$("[id*=tooltipsy]").remove();
 		$("nav a").removeClass("selected");
 		$("#a-questions").addClass("selected");
 		$(".main").attr('id', 'page-questions');

@@ -89,6 +89,7 @@ QK.AppRouter = Backbone.Router.extend({
 		"(/)": 					"questions",
 		"users(/)": 			"users",
 		"questions/ask(/)": 	"ask",
+		"questions/:id": 		"solveit",
 		"leaderboard(/)": 		"leaderboard"
 	},
 
@@ -104,7 +105,9 @@ QK.AppRouter = Backbone.Router.extend({
 	leaderboard: function() {
 		alert("YO! leaderboard!");
 	},
-
+	solveit: function(id) {
+		QK.Routes.SolveItPage.handle(id);
+	}
 });
 
 $(document).on("click", "a:not([data-bypass])", function(evt) {

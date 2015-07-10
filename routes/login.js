@@ -58,7 +58,7 @@ router.post('/login', function(req, res) {
 		res.redirect('/home');
 		return;
 	}
-	var uname = req.body.username,
+	var uname = req.body.username.toString().trim().toLowerCase(),
 		pwd = req.body.password;
 
 	var errorMessages = [];
@@ -77,8 +77,9 @@ router.post('/login', function(req, res) {
 				res.status(500).end();
 			}
 			else if(user) {
-				setupsession(req,user);
-				res.redirect('/home');
+				setupsession(req,user,function() {
+					res.redirect('/home');
+				});
 				/*res.status(200).json({
 					username: user.username,
 					name: user.name,

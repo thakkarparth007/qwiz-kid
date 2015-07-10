@@ -74,6 +74,9 @@ function validate_passwords(pwd, cnfm) {
 }
 
 function validate_name(name) {
+	if(name.length === 0)
+		return Promise.resolve("Name is required.");
+	
 	if(name.length > config.validation.MAX_NAME_LENGTH)
 		return Promise.resolve("That seems too long to be a real name.");
 
@@ -81,8 +84,9 @@ function validate_name(name) {
 }
 
 function validate_email(email) {
-	if(validator.isEmail(email) === false)
+	if(validator.isEmail(email) === false) {
 		return Promise.resolve("Invalid email.");
+	}
 
 	// check if the email is already there in the database.
 	return new Promise(function(resolve,reject) {
@@ -109,6 +113,9 @@ function validate_emailpublic(emailpublic) {
 }
 
 function validate_college(college) {
+	if(college.length === 0)
+		return Promise.resolve("College name is required.");
+
 	if(college.length > config.validation.MAX_COLLEGE_LENGTH)
 		return Promise.resolve("College name seems too long to be real.");
 
@@ -118,6 +125,9 @@ function validate_college(college) {
 }
 
 function validate_state(state) {
+	if(state.length === 0)
+		return Promise.resolve("State name is required.");
+
 	if(state.length > config.validation.MAX_STATE_LENGTH)
 		return Promise.resolve("State name seems too long to be real.");
 
@@ -129,6 +139,9 @@ function validate_state(state) {
 }
 
 function validate_country(country) {
+	if(country.length === 0) {
+		return Promise.resolve("Country name is required.");
+	}
 	if(country.length > config.validation.MAX_COUNTRY_LENGTH)
 		return Promise.resolve("Country name seems too long to be real.");
 
@@ -172,7 +185,7 @@ function register(username,password,name,email,emailpublic,college,state,country
 					return;
 				}
 
-				resolve(doc);
+				resolve(doc.ops[0]);
 			});
 		});
 	});
@@ -200,13 +213,13 @@ router.post('/signup', function(req, res) {
 
 	var form = req.body;
 
-	var username 		= form.username.toString().trim(),
+	var username 		= form.username.toString().trim().toLowerCase(),
 		// don't trim the passwords!
 		password 		= form.password.toString(),
 		cnfmpassword 	= form.cnfmpassword.toString(),
 
 		name 			= form.name.toString().trim(),
-		email 			= form.email.toString().trim(),
+		email 			= form.email.toString().trim().toLowerCase(),
 		emailpublic 	= form.emailpublic.toString().trim(),
 		college 		= form.college.toString().trim(),
 		state 			= form.state.toString().trim(),
@@ -245,8 +258,9 @@ router.post('/signup', function(req, res) {
 		// no errors? great. Register him.
 		register(username,password,name,email,emailpublic,college,state,country)
 			.then(function(user) { 
-				setupsession(req,user);
-				res.redirect('/');
+				setupsession(req,user,function() {
+					res.redirect('/');
+				});
 			})
 			.catch(function(err) {
 				logger.error('Error in registering user.', err);

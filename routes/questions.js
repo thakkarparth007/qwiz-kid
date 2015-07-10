@@ -116,8 +116,9 @@ function getseen(username) {
 			var ret = {};
 			docs.forEach(function(doc) {
 				delete doc.username;
+				doc._id = doc.qid;
+				ret[doc.qid.toString()] = doc;
 				delete doc.qid;
-				ret[doc._id.toString()] = doc;
 			});
 
 			resolve(ret);
@@ -138,12 +139,12 @@ function search(username, query, seen, sortby, sortord, limit, page) {
 			// choose unseen or seen questions based on `seen`
 			if(seen !== true) {
 				findquery._id = {
-					$nin: Object.keys(seenones).map( q => new ObjectID(q._id) )
+					$nin: Object.keys(seenones).map( qid => new ObjectID(qid) )
 				};
 			}
 			else {
 				findquery._id = {
-					$in: Object.keys(seenones).map( q => new ObjectID(q._id) )
+					$in: Object.keys(seenones).map( qid => new ObjectID(qid) )
 				};
 			}
 
@@ -168,22 +169,33 @@ function search(username, query, seen, sortby, sortord, limit, page) {
 					incorrattempts: 1,
 					successratio: 1,
 					createdat: 1,
-					editedat: 1
+					editedat: 1,
+					answer: 1	// will be deleted if not seen && not attempted
 				})
 				.sort(sort)
 				.skip((page-1) * limit)
 				.limit(limit);
 
 			// return the attempt details too!
-			if(seen) {
-				search_cursor.map(function(q) {
-					// this is correct. q._id is a string 
-					// (that's how getseen() returns)
+			search_cursor.map(function(q) {
+				// this is correct. q._id is a string 
+				// (that's how getseen() returns)
+				if(seen) {
 					q.timetoanswer = seenones[q._id].timetoanswer;
 					q.attempt = seenones[q._id].attempt;
 					q.seentime = seenones[q._id].seentime;
-					q.points = seenones[q._id].points;
-				});
+					q.points = seenones[q._id].points;					
+				}
+				
+				// delete the answer if not attempted/seen-but-not-attempted
+				if(!seen || q.attempt === null) {
+					delete q.answer;
+				}
+
+				return q;
+			});
+			if(seen) {
+				
 			}
 
 			search_cursor.toArray(function(err,ques) {
@@ -274,6 +286,8 @@ function getseenstatus(username,qid) {
 function getquestion(username, qid) {
 	init();
 	return new Promise(function(resolve,reject) {
+		if(!ObjectID.isValid(qid))
+			return reject(new BadParameterError("_id", "Bad question ID given"));
 		// getting question-stats and seen-status
 		// can be done in parallel. 
 		// So, do it in parallel.
@@ -341,7 +355,7 @@ function getquestion(username, qid) {
 				delete qstat.explanation;
 
 				markseen(username,qid).then(function() { 
-					logger.debug("%d Marked as seen.", qid); 
+					logger.debug("%s Marked as seen.", qid.toString()); 
 				});
 				resolve(qstat);
 			}
@@ -370,6 +384,10 @@ function timeleft(timelimit, seentime) {
 		return timelimit;
 
 	return (seentime + timelimit) - Date.now()/1000;;
+}
+
+function timetaken(seentime) {
+	return Date.now()/1000 - seentime;
 }
 
 // does NOT calculate the score.
@@ -477,6 +495,8 @@ function timedout(username,qid) {
 function evaluate(username,qid,attempt) {
 	//init();
 	return new Promise(function(resolve, reject) {
+		if(!ObjectID.isValid(qid))
+			return reject(new BadParameterError("qid","Bad question ID given"));
 		// getting question-stats and seen-status
 		// can be done in parallel. 
 		// So, do it in parallel.
@@ -487,6 +507,12 @@ function evaluate(username,qid,attempt) {
 		]).then(function(result) {
 			var qstat = result[0],
 				seenstatus = result[1];
+
+			// you can't answer your own question, bbz
+			if(qstat.ownerid == username) {
+				return reject(new BadParameterError("question","Can't answer " +
+					"a question set by yourself"));
+			}
 
 			// trying to submit again, eh?
 			if(seenstatus.attempt !== null) {
@@ -502,13 +528,14 @@ function evaluate(username,qid,attempt) {
 			}
 
 			var t = timeleft(qstat.timelimit, seenstatus.seentime);
-			var timetaken = qstat.timelimit - t;
+			var _timetaken = timetaken(seenstatus.seentime);
 
 			// gave up. Ha!
 			if(attempt == -1) {
 				updatescore(username,qid,0,attempt,-1);
 				updateqstats(qid,username,false,-1);
 				resolve(0);
+				return;
 			}
 			
 			// wrong answer. Ha. Ha. Ha. Die.
@@ -520,9 +547,13 @@ function evaluate(username,qid,attempt) {
 			}
 
 			// right answer? Meh.
-			updatescore(username,qid,10,attempt,timetaken);
-			updateqstats(qid,username,true,timetaken);
+			updatescore(username,qid,10,attempt,_timetaken);
+			updateqstats(qid,username,true,_timetaken);
 			resolve(10);
+			return;
+		})
+		.catch(function(err) {
+			reject(err);
 		});
 	});
 }
@@ -740,7 +771,11 @@ function createquestion(username,title,question,options,
 			onedone();
 
 		// verify timelimit
-		if(timelimit != Number.POSITIVE_INFINITY) {
+		timelimit = parseInt(timelimit,10);
+		if(Number.isNaN(timelimit))
+			timelimit = Number.POSITIVE_INFINITY;
+
+		if(timelimit == Number.POSITIVE_INFINITY) {
 			timelimit = parseInt(timelimit,10);
 			if(timelimit > qconf.MAX_TIMELIMIT || 
 				timelimit < qconf.MIN_TIMELIMIT)
@@ -773,14 +808,14 @@ router.get('/', function(req, res) {
 	var sortord = util.clean_sortord(Q.sortord) || -1;
 	var limit 	= util.clean_limit(Q.limit) || 20;
 	var page 	= util.clean_page(Q.page) || 1;
-	var seen 	= Q.seen;
+	var seen 	= parseInt(Q.seen || "0",10);
 
 	var username = req.session.username;
 
-	if(seen == "1")
-		seen = 1;
+	if(seen == 1)
+		seen = true;
 	else
-		seen = 0;	// default: unseen
+		seen = false;	// default: unseen
 
 	search(username, searchq.main, seen, sortby, sortord, limit, page)
 		.then(function(result) {
@@ -879,7 +914,6 @@ router.post('/:qid/submit', function(req,res) {
 
 	var view = req.query.view || "";
 		view = view.toString();
-
 
 	evaluate(username,req.params.qid.toString(),answer)
 		.then(function(points) {

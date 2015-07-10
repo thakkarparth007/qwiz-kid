@@ -49,4 +49,50 @@ templates['questions_pagecontent'] = template({"compiler":[6,">= 2.0.0-beta.1"],
 templates['questions_topbar'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div class=\"search-wrapper transition-children\">\n	<input type=\"text\" id=\"txt-search-questions\" placeholder=\"Search Questions...\"> \n	<input type=\"button\" id=\"btn-search-questions\" value=\"Search\">\n</div>";
 },"useData":true});
+templates['solveit_pagecontent'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
+
+  return "<div class=\"pane\">\n	<div id=\"question-wrapper\">\n		<label>Question</label>\n		<div id=\"question\">\n			<p>"
+    + alias3(((helper = (helper = helpers.question || (depth0 != null ? depth0.question : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"question","hash":{},"data":data}) : helper)))
+    + "</p>\n		</div>\n	</div>\n\n	<div id=\"options-wrapper\">\n		<div class=\"option-wrapper\">\n			<label for=\"option1\">A</label>\n			<input type=\"button\" id=\"option1\" name=\"option1\" value=\""
+    + alias3(((helper = (helper = helpers.option1 || (depth0 != null ? depth0.option1 : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"option1","hash":{},"data":data}) : helper)))
+    + "\">\n		</div>\n\n		<div class=\"option-wrapper\">\n			<label for=\"option1\">B</label>\n			<input type=\"button\" id=\"option2\" name=\"option2\" value=\""
+    + alias3(((helper = (helper = helpers.option2 || (depth0 != null ? depth0.option2 : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"option2","hash":{},"data":data}) : helper)))
+    + "\">\n		</div>\n\n		<div class=\"option-wrapper\">\n			<label for=\"option1\">C</label>\n			<input type=\"button\" id=\"option3\" name=\"option3\" value=\""
+    + alias3(((helper = (helper = helpers.option3 || (depth0 != null ? depth0.option3 : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"option3","hash":{},"data":data}) : helper)))
+    + "\">\n		</div>\n\n		<div class=\"option-wrapper\">\n			<label for=\"option1\">D</label>\n			<input type=\"button\" id=\"option4\" name=\"option4\" value=\""
+    + alias3(((helper = (helper = helpers.option4 || (depth0 != null ? depth0.option4 : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"option4","hash":{},"data":data}) : helper)))
+    + "\">\n		</div>\n	</div>\n</div>\n\n<div class=\"pane\">\n	<div id=\"explanation-wrapper\">\n		<label>Explanation</label>\n		<div id=\"explanation\">\n			<p>"
+    + alias3(((helper = (helper = helpers.explanation || (depth0 != null ? depth0.explanation : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"explanation","hash":{},"data":data}) : helper)))
+    + "</p>\n		</div>\n	</div>\n\n	<div id=\"categories-wrapper\">\n		<label>Categories</label>\n		<div id=\"categories\">"
+    + alias3(((helper = (helper = helpers.categories || (depth0 != null ? depth0.categories : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"categories","hash":{},"data":data}) : helper)))
+    + "</div>\n	</div>\n</div>\n</div>";
+},"useData":true});
+templates['solveit_topbar'] = template({"1":function(depth0,helpers,partials,data) {
+    var helper;
+
+  return "		<span class=\"question-attempted\">"
+    + this.escapeExpression(((helper = (helper = helpers.attempt || (depth0 != null ? depth0.attempt : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"attempt","hash":{},"data":data}) : helper)))
+    + "</span>\n";
+},"3":function(depth0,helpers,partials,data) {
+    var helper;
+
+  return "		"
+    + this.escapeExpression(((helper = (helper = helpers.timelimit || (depth0 != null ? depth0.timelimit : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"timelimit","hash":{},"data":data}) : helper)))
+    + "\n";
+},"5":function(depth0,helpers,partials,data) {
+    return "		None\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var stack1, helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
+
+  return "<div class=\"question-title\">\n	<strong>Title</strong>: \n	<span class=\"value\">"
+    + alias3(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"title","hash":{},"data":data}) : helper)))
+    + "</span>\n\n"
+    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.attempt : depth0),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "</div>\n\n<div class=\"question-setter\">\n	<strong>Setter</strong>: \n	<span class=\"value\">"
+    + alias3(((helper = (helper = helpers.ownerid || (depth0 != null ? depth0.ownerid : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"ownerid","hash":{},"data":data}) : helper)))
+    + "</span>\n</div>\n\n<div class=\"question-time-limit\">\n	<strong>Time Limit</strong>:\n\n	<span class=\"value\">\n"
+    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.timelimit : depth0),{"name":"if","hash":{},"fn":this.program(3, data, 0),"inverse":this.program(5, data, 0),"data":data})) != null ? stack1 : "")
+    + "	</span>\n</div>";
+},"useData":true});
 })();
