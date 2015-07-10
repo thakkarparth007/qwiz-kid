@@ -1,77 +1,114 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Qwiz-Kid! An online quizzing platform.</title>
+	<title>QwizKid! An online quizzing platform.</title>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/common.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/landingpage.css">
 </head>
 <body>
-	Welcome to Qwiz-Kid
+	<div id="bg_topbar"></div>
+	<div id="headers" class="transition-children no-select">
+		<h1>QwizKid</h1>
+		<h2>Quiz Portal for Wiz Kids.<br> And matures.</h2>
 
-	<div id="forms">
-		<form method="POST" action="./login">
-			<div id="login_topbar">Login</div>
+		<div id="button_container">
+			<a href="/login">Login</a>
+			<a href="/signup">Signup</a>
+		</div>
+	</div>
 
-			<label for="username">Username</label>
-			<input name="username" id="username">
-			<br>
+	<div id="forms" class="transition-children">
+		<form id="loginform" method="POST" action="./login">
+			<div class="topbar">Login</div>
 
-			<label for="password">Password</label>
-			<input type="password" name="password" id="password">
-			<br>
+			<div class="fieldset">
+				<label for="username">Username</label>
+				<input name="username" id="username">
+			</div>
 
-			<input type="submit" value="Login" name="submit">
-			<span class="error">{{ loginerrors.message }}</span>
+			<div class="fieldset">
+				<label for="password">Password</label>
+				<input type="password" name="password" id="password">
+			</div>
+
+			<div class="fieldset">
+				<label></label>
+				<input type="submit" value="Login" name="submit">
+			</div>
+
+			<div class="fieldset">
+				<label></label>
+				<span class="error">{{ loginerrors.message }}</span>
+			</div>
 		</form>
 
-		<form method="POST" action="./signup">
-			<div id="login_topbar">Signup</div>
+		<form id="signupform" method="POST" action="./signup">
+			<div class="topbar">Signup</div>
 
-			<label for="username">Username</label>
-			<input name="username" id="username">
-			<span class="error">{{ signuperrors.username }}</span>
-			<br>
+			<div class="fieldset">
+				<label for="username">Username</label>
+				<input name="username" id="username">
+				<span class="error">{{ signuperrors.username }}</span>
+			</div>
 
-			<label for="password">Password</label>
-			<input type="password" name="password" id="password">
-			<span class="error">{{ signuperrors.password }}</span>
-			<br>
+			<div class="fieldset">
+				<label for="password">Password</label>
+				<input type="password" name="password" id="password">
+				<span class="error">{{ signuperrors.password }}</span>
+			</div>
 
-			<label for="cnfmpassword">Confirm Password</label>
-			<input type="password" name="cnfmpassword" id="cnfmpassword">
-			<span class="error">{{ signuperrors.cnfmpassword }}</span>
-			<br>
+			<div class="fieldset">
+				<label for="cnfmpassword">Confirm Password</label>
+				<input type="password" name="cnfmpassword" id="cnfmpassword">
+				<span class="error">{{ signuperrors.cnfmpassword }}</span>
+			</div>
 
-			<label for="name">Name</label>
-			<input name="name" id="name">
-			<span class="error">{{ signuperrors.name }}</span>
-			<br>
+			<div class="fieldset">
+				<label for="name">Name</label>
+				<input name="name" id="name">
+				<span class="error">{{ signuperrors.name }}</span>
+			</div>
 
-			<label for="email">Email</label>
-			<input type="email" name="email" id="email">
-			<span class="error">{{ signuperrors.email }}</span>
-			<br>
+			<div class="fieldset">
+				<label for="email">Email</label>
+				<input type="email" name="email" id="email">
+				<span class="error">{{ signuperrors.email }}</span>
+			</div>
 
-			<label for="emailpublic">Email visibility</label>
-			<input type="radio" name="emailpublic" checked value="true">Public</input>
-			<input type="radio" name="emailpublic" value="false">No one</input>
-			<span class="error">{{ signuperrors.emailpublic }}</span>
-			<br>
+			
+			<div class="fieldset">
+				<label for="emailpublic">Email visibility</label>
+				<div class="together">
+					<input type="radio" name="emailpublic" checked value="true"><span>Public</span>
+					<input type="radio" name="emailpublic" value="false"><span>No one</span>
+				</div>
+				<span class="error">{{ signuperrors.emailpublic }}</span>
+			</div> 
 
-			<label for="college">College</label>
-			<input name="college" id="college">
-			<span class="error">{{ signuperrors.college }}</span>
-			<br>
+			<!--
+			<div class="fieldset">
+				<label for="college">College</label>
+				<input name="college" id="college">
+				<span class="error">{{ signuperrors.college }}</span>
+			</div>
 
-			<label for="state">State</label>
-			<input name="state" id="state">
-			<span class="error">{{ signuperrors.state }}</span>
-			<br>
+			<div class="fieldset">
+				<label for="state">State</label>
+				<input name="state" id="state">
+				<span class="error">{{ signuperrors.state }}</span>
+			</div>
 
-			<label for="country">Country</label>
-			<input name="country" id="country">
-			<span class="error">{{ signuperrors.country }}</span>
-			<br>
+			<div class="fieldset">
+				<label for="country">Country</label>
+				<input name="country" id="country">
+				<span class="error">{{ signuperrors.country }}</span>
+			</div>
+			-->
 
-			<input type="submit" value="Signup" name="submit">
+			<div class="fieldset">
+				<label></label>
+				<input type="submit" value="Signup" name="submit">
+			</div>
 		</form>
 	</div>
 </body>

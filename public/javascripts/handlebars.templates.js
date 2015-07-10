@@ -11,9 +11,11 @@ templates['leaderboard_entry'] = template({"compiler":[6,">= 2.0.0-beta.1"],"mai
 
   return "<tr>\n	<td class=\"user-rank\">\n		"
     + alias3(((helper = (helper = helpers.rank || (depth0 != null ? depth0.rank : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"rank","hash":{},"data":data}) : helper)))
-    + "\n	</td>\n	<td class=\"user-username\">\n		<span>"
+    + "\n	</td>\n	<td class=\"user-username\">\n		<span><a href=\"/users/"
     + alias3(((helper = (helper = helpers.username || (depth0 != null ? depth0.username : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"username","hash":{},"data":data}) : helper)))
-    + "</span>\n	</td>\n	<td class=\"user-name\">\n		<span>"
+    + "\">"
+    + alias3(((helper = (helper = helpers.username || (depth0 != null ? depth0.username : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"username","hash":{},"data":data}) : helper)))
+    + "</a></span>\n	</td>\n	<td class=\"user-name\">\n		<span>"
     + alias3(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"name","hash":{},"data":data}) : helper)))
     + "</span>\n	</td>\n	<td class=\"user-score\">\n		<span>"
     + alias3(((helper = (helper = helpers.score || (depth0 != null ? depth0.score : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"score","hash":{},"data":data}) : helper)))

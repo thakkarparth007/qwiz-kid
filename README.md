@@ -38,14 +38,21 @@ A basic quizzing platform
 
 ## <a name="screenshots"></a> Screenshots
 
+**Landing Page**
+![Landing Page](/screenshots/homepage.png)
+
 **List of all questions**
 ![List of all questions](/screenshots/questions.png)
 
 **Create a question**
 ![Create a question](/screenshots/ask.png)
 
-**Created question in the list**
-![Created question in the list](/screenshots/questions2.png)
+**Answering a question**
+![Answering a question](/screenshots/questions2.png)
+
+**Leaderboard**
+![Leaderboard](/screenshots/leaderboard.png)
+
 ----
 ## <a name="internals"></a> Internals
 
