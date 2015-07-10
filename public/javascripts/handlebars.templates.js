@@ -6,12 +6,35 @@ templates['ask_pagecontent'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main"
 templates['ask_topbar'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div class=\"question-title-wrapper\">\n	<input type=\"text\" name=\"title\" id=\"txt-question-title\" placeholder=\"Title of the question...\"> \n	<input type=\"button\" id=\"btn-question-save\" value=\"Save!\">\n</div>\n\n<div id=\"correct-answer-wrapper\">\n	<span>Correct Answer</span>\n	<div id=\"answer-choices-container\">\n		<input id=\"correct-answer\" value=\"Choose\">\n		<div id=\"answers-drop-down\">\n			<div id=\"option-a\">A</div>\n			<div id=\"option-b\">B</div>\n			<div id=\"option-c\">C</div>\n			<div id=\"option-d\">D</div>\n		</div>\n	</div>\n</div>\n\n<div id=\"time-limit-wrapper\">\n	<span>Time Limit</span>\n	<input type=\"number\" id=\"txt-time-limit\" placeholder=\"None\">\n</div>";
 },"useData":true});
-templates['questions_QuestionEntry'] = template({"1":function(depth0,helpers,partials,data) {
-    var helper;
+templates['leaderboard_entry'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
 
-  return "				"
-    + this.escapeExpression(((helper = (helper = helpers.fastest || (depth0 != null ? depth0.fastest : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"fastest","hash":{},"data":data}) : helper)))
-    + "\n";
+  return "<tr>\n	<td class=\"user-rank\">\n		"
+    + alias3(((helper = (helper = helpers.rank || (depth0 != null ? depth0.rank : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"rank","hash":{},"data":data}) : helper)))
+    + "\n	</td>\n	<td class=\"user-username\">\n		<span>"
+    + alias3(((helper = (helper = helpers.username || (depth0 != null ? depth0.username : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"username","hash":{},"data":data}) : helper)))
+    + "</span>\n	</td>\n	<td class=\"user-name\">\n		<span>"
+    + alias3(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"name","hash":{},"data":data}) : helper)))
+    + "</span>\n	</td>\n	<td class=\"user-score\">\n		<span>"
+    + alias3(((helper = (helper = helpers.score || (depth0 != null ? depth0.score : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"score","hash":{},"data":data}) : helper)))
+    + "</span>\n	</td>\n</tr>";
+},"useData":true});
+templates['leaderboard_pagecontent'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<table id=\"tbl-leaderboard\" class=\"transition-children\">\n	<tr id=\"tbl-leaderboard-header\">\n		<th id=\"th-rank\">Rank</th>\n		<th id=\"th-username\">Username</th>\n		<th id=\"th-name\">Name</th>\n		<th id=\"th-score\">Score</th>\n	</tr>\n</table>";
+},"useData":true});
+templates['leaderboard_topbar'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
+
+  return "<div class=\"page-title\">\n	Leaderboard\n</div>\n\n<div class=\"score\">\n	Your Score : <span class=\"value\">"
+    + alias3(((helper = (helper = helpers.score || (depth0 != null ? depth0.score : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"score","hash":{},"data":data}) : helper)))
+    + "</span>\n</div>\n\n<div class=\"rank\">\n	Your Rank : <span class=\"value\">"
+    + alias3(((helper = (helper = helpers.rank || (depth0 != null ? depth0.rank : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"rank","hash":{},"data":data}) : helper)))
+    + "</span>\n</div>\n\n";
+},"useData":true});
+templates['questions_QuestionEntry'] = template({"1":function(depth0,helpers,partials,data) {
+    return "				"
+    + this.escapeExpression((helpers.round || (depth0 && depth0.round) || helpers.helperMissing).call(depth0,(depth0 != null ? depth0.fastest : depth0),{"name":"round","hash":{},"data":data}))
+    + "s\n";
 },"3":function(depth0,helpers,partials,data) {
     return "				N/A\n";
 },"5":function(depth0,helpers,partials,data) {
@@ -32,7 +55,7 @@ templates['questions_QuestionEntry'] = template({"1":function(depth0,helpers,par
     + "</a>\n	</td>\n	<td class=\"votes\">\n		<span>"
     + alias3(((helper = (helper = helpers.votecount || (depth0 != null ? depth0.votecount : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"votecount","hash":{},"data":data}) : helper)))
     + "</span>\n	</td>\n	<td class=\"success-ratio\">\n		<span>"
-    + alias3(((helper = (helper = helpers.successratio || (depth0 != null ? depth0.successratio : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"successratio","hash":{},"data":data}) : helper)))
+    + alias3((helpers.toPercentage || (depth0 && depth0.toPercentage) || alias1).call(depth0,(depth0 != null ? depth0.successratio : depth0),{"name":"toPercentage","hash":{},"data":data}))
     + "</span>\n	</td>\n	<td class=\"fastest\">\n		<span>\n"
     + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.fastest : depth0),{"name":"if","hash":{},"fn":this.program(1, data, 0),"inverse":this.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "		</span>\n	</td>\n	<td class=\"question-setter\">\n		<a href=\"/users/"

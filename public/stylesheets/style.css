@@ -709,3 +709,97 @@ header:after {
 	font-size: 18pt;
 	padding: 5px;
 }
+
+/********** page-leaderboard ******************/
+
+#page-leaderboard .page-title,
+#page-leaderboard .score,
+#page-leaderboard .rank {
+	width: 30%;
+	margin: 0 1.5%;
+	display: block;
+	font-size: 16pt;
+	color: white;
+	float: left;
+	text-align: center;
+	height: 40px;
+	line-height: 40px;
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#page-leaderboard #top-bar .value {
+	border-bottom: 1px solid white;
+}
+
+#tbl-leaderboard {
+	border-collapse: collapse;
+	table-layout: fixed;
+	width: 75%;
+	margin: 0 auto;
+}
+
+#tbl-leaderboard tr:first-child {
+	background: #7745D9;
+	background: #3182FE;
+	color: white;
+}
+
+#tbl-leaderboard th {
+	padding: 10px;
+	text-align: left;
+	white-space: nowrap;
+}
+
+#tbl-leaderboard #th-rank {
+	width: 10%;
+}
+
+#tbl-leaderboard #th-username {
+	width: 35%;
+}
+
+#tbl-leaderboard #th-name {
+	width: 35%;
+}
+
+#tbl-leaderboard #th-score {
+	width: 20%;
+}
+
+/* align the scores to center */
+#tbl-leaderboard td.score {
+	text-align: center;
+}
+
+#tbl-leaderboard tr:not(:first-child):nth-child(odd) {
+	background: rgba(119,69,217,0.2);
+}
+
+#tbl-leaderboard td {
+	padding: 10px;
+	font-family: Ubuntu;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#tbl-leaderboard a {
+	text-decoration: none;
+	display: block;
+	height: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	border-bottom: 3px solid transparent;
+	padding: 5px;
+
+	color: #268232;
+}
+
+#tbl-leaderboard a:hover {
+	color: #268232;
+	border-bottom: 3px solid #268232;
+}

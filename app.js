@@ -30,6 +30,7 @@ var login = require('./routes/login');
 var signup = require('./routes/signup');
 var questions = require('./routes/questions');
 var categories = require('./routes/categories');
+var leaderboard = require('./routes/leaderboard');
 
 // done requiring the files
 
@@ -59,6 +60,7 @@ app.use(restrict);
 app.use('/ajax/users', users);
 app.use('/ajax/questions', questions);
 app.use('/ajax/categories', categories);
+app.use('/ajax/leaderboard', leaderboard);
 
 app.use('/home(/*)?', function(req,res) {
 	res.render('dashboard', { 

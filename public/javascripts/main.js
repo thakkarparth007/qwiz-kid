@@ -7,6 +7,16 @@
 
 var QK = window.QwizKid = window.QwizKid || {};
 
+//
+// handlebars helpers
+//
+
+// rounds to two-decimal places
+Handlebars.registerHelper('round',function(num) { return num.toFixed(2); });
+Handlebars.registerHelper('toPercentage',function(num) { 
+	return Math.round(num * 100) + '%';
+});
+
 QK.Routes = QK.Routes || {}; 
 QK.Models = QK.Models || {};
 QK.Collections = QK.Collections || {};
@@ -103,7 +113,7 @@ QK.AppRouter = Backbone.Router.extend({
 		QK.Routes.AskPage.handle();
 	},
 	leaderboard: function() {
-		alert("YO! leaderboard!");
+		QK.Routes.LeaderboardPage.handle();
 	},
 	solveit: function(id) {
 		QK.Routes.SolveItPage.handle(id);

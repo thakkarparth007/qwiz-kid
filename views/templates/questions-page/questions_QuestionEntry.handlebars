@@ -6,12 +6,12 @@
 		<span>{{votecount}}</span>
 	</td>
 	<td class="success-ratio">
-		<span>{{ successratio }}</span>
+		<span>{{ toPercentage successratio }}</span>
 	</td>
 	<td class="fastest">
 		<span>
 			{{#if fastest }} 
-				{{ fastest }}
+				{{ round fastest }}s
 			{{else}}
 				N/A
 			{{/if}}

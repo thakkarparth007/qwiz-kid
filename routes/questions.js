@@ -917,6 +917,7 @@ router.post('/:qid/submit', function(req,res) {
 
 	evaluate(username,req.params.qid.toString(),answer)
 		.then(function(points) {
+			req.session.score += points;
 			if(view == 'json') {
 				res.status(200).json(points);
 			}
