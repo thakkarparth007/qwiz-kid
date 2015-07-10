@@ -7,6 +7,7 @@ A basic quizzing platform
 	- [Prerequisite Software](#prereq)
 	- [Steps to build](#stepstobuild)
 	- [Steps to run](#stepstorun)
+- [Screenshots](#screenshots)
 - [Internals](#internals)
 	- [Database Collections](#database)
 	- [Routes](#routes)
@@ -34,7 +35,21 @@ A basic quizzing platform
 > 3. If you want to change the run-time settings, make required changes to the `./config.js` file.
 
 ----
+
+## <a name="screenshots"></a> Screenshots
+
+**List of all questions**
+![List of all questions](/screenshots/questions.png)
+
+**Create a question**
+![Create a question](/screenshots/ask.png)
+
+**Created question in the list**
+![Created question in the list](/screenshots/questions2.png)
+----
 ## <a name="internals"></a> Internals
+
+# WARNING: The following part is out of sync with the code.
 
 ### <a name="database"></a> Database collections
 1. `users`
@@ -52,7 +67,7 @@ A basic quizzing platform
 
 2. `questions`
 	* _id 				*indexed*
-	* categoryids:		```[]``` *indexed*
+	* categories:		```[]``` *indexed*
 	* ownerid 			*indexed*
 	* title
 	* question 			*text index*

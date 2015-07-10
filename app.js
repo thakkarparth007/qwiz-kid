@@ -29,6 +29,7 @@ var restrict = require('./middleware/restrict');
 var login = require('./routes/login');
 var signup = require('./routes/signup');
 var questions = require('./routes/questions');
+var categories = require('./routes/categories');
 
 // done requiring the files
 
@@ -57,6 +58,7 @@ app.use('/', signup);
 app.use(restrict);
 app.use('/ajax/users', users);
 app.use('/ajax/questions', questions);
+app.use('/ajax/categories', categories);
 
 app.use('/home(/*)?', function(req,res) {
 	res.render('dashboard', { 

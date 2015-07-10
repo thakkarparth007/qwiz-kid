@@ -10,7 +10,7 @@ QK.Routes = QK.Routes || {};
 QK.Models = QK.Models || {};
 
 var QuestionModel = Backbone.Model.extend({
-
+	idAttribute: "_id",
 });
 
 var QuestionsCollection = Backbone.Collection.extend({
@@ -44,10 +44,9 @@ var QuestionsPage = Backbone.View.extend({
 		this.render();
 	},
 	addQuestion: function(q) {
-		console.log(q.attributes);
 		$("#tbl-questions-header").after( this.questionTmpl(q.toJSON()) );
 	},
-	error: function(err) {
+	error: function(model,err) {
 		alert("Error occured while fetching data from server");
 		console.log(err);
 	},

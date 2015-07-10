@@ -4,7 +4,7 @@ templates['ask_pagecontent'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main"
     return "<div class=\"pane\">\n	<div id=\"question-wrapper\">\n		<label for=\"txt-question\">Question</label>\n		<textarea id=\"txt-question\" name=\"question\" placeholder=\"Type your question here...\"></textarea>\n	</div>\n\n	<div id=\"options-wrapper\">\n		<div class=\"option-wrapper\">\n			<label for=\"option1\">A</label>\n			<input type=\"text\" id=\"option1\" name=\"option1\" placeholder=\"Option 1\">\n		</div>\n\n		<div class=\"option-wrapper\">\n			<label for=\"option1\">B</label>\n			<input type=\"text\" id=\"option2\" name=\"option2\" placeholder=\"Option 2\">\n		</div>\n\n		<div class=\"option-wrapper\">\n			<label for=\"option1\">C</label>\n			<input type=\"text\" id=\"option3\" name=\"option3\" placeholder=\"Option 3\">\n		</div>\n\n		<div class=\"option-wrapper\">\n			<label for=\"option1\">D</label>\n			<input type=\"text\" id=\"option4\" name=\"option4\" placeholder=\"Option 4\">\n		</div>\n	</div>\n</div>\n\n<div class=\"pane\">\n	<div id=\"explanation-wrapper\">\n		<label for=\"txt-explanation\">Explanation</label>\n		<textarea placeholder=\"Type your explanation here...\" id=\"txt-explanation\" name=\"explanation\"></textarea>\n	</div>\n\n	<div id=\"categories-wrapper\">\n		<label for=\"txt-categories\">Categories</label>\n		<input type=\"text\" id=\"txt-categories\" name=\"categories\" placeholder=\"Add categories...\">\n	</div>\n</div>\n</div>";
 },"useData":true});
 templates['ask_topbar'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div class=\"question-title-wrapper\">\n	<input type=\"text\" name=\"title\" id=\"txt-question-title\" placeholder=\"Title of the question...\"> \n	<input type=\"button\" id=\"btn-question-save\" value=\"Save!\" disabled=\"true\">\n</div>\n\n<div id=\"correct-answer-wrapper\">\n	<span>Correct Answer</span>\n	<div id=\"answer-choices-container\">\n		<span id=\"correct-answer\">A</span>\n		<div id=\"answers-drop-down\">\n			<div id=\"option-a\">A</div>\n			<div id=\"option-b\">B</div>\n			<div id=\"option-c\">C</div>\n			<div id=\"option-d\">D</div>\n		</div>\n	</div>\n</div>\n\n<div id=\"time-limit-wrapper\">\n	<span>Time Limit</span>\n	<input type=\"number\" id=\"txt-time-limit\" placeholder=\"None\">\n</div>";
+    return "<div class=\"question-title-wrapper\">\n	<input type=\"text\" name=\"title\" id=\"txt-question-title\" placeholder=\"Title of the question...\"> \n	<input type=\"button\" id=\"btn-question-save\" value=\"Save!\">\n</div>\n\n<div id=\"correct-answer-wrapper\">\n	<span>Correct Answer</span>\n	<div id=\"answer-choices-container\">\n		<input id=\"correct-answer\" value=\"Choose\">\n		<div id=\"answers-drop-down\">\n			<div id=\"option-a\">A</div>\n			<div id=\"option-b\">B</div>\n			<div id=\"option-c\">C</div>\n			<div id=\"option-d\">D</div>\n		</div>\n	</div>\n</div>\n\n<div id=\"time-limit-wrapper\">\n	<span>Time Limit</span>\n	<input type=\"number\" id=\"txt-time-limit\" placeholder=\"None\">\n</div>";
 },"useData":true});
 templates['questions_QuestionEntry'] = template({"1":function(depth0,helpers,partials,data) {
     var helper;
@@ -18,9 +18,9 @@ templates['questions_QuestionEntry'] = template({"1":function(depth0,helpers,par
     var alias1=this.lambda, alias2=this.escapeExpression;
 
   return "			<a href=\"/categories/"
-    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
+    + alias2(alias1(depth0, depth0))
     + "\">"
-    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + alias2(alias1(depth0, depth0))
     + "</a>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1, helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;

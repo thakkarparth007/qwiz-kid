@@ -8,6 +8,81 @@
 var QK = window.QwizKid = window.QwizKid || {};
 
 QK.Routes = QK.Routes || {}; 
+QK.Models = QK.Models || {};
+QK.Collections = QK.Collections || {};
+
+QK.Collections.Categories = new (Backbone.Collection.extend({
+	idAttribute: "_id",
+	url: '/ajax/categories'
+}))();
+
+QK.Collections.Categories.fetch();
+
+QK.ErrorFactory = function(elem, message, options) {
+	if(typeof options == "string") {
+		var dir = options;
+		options = {
+			direction: dir
+		};
+	}
+	options = options || {};
+
+	function _get_offset() {
+		if(options.offset) return options.offset;
+		if(!options.direction) 
+			return options.offset || [1,0];	// default: right
+
+		switch(options.direction) {
+			case 'top': 	return [0,-1];
+			case 'left': 	return [-1,0];
+			case 'bottom': 	return [0,1];
+			case 'right': 	return [1,0];
+			default: 		return [1,0];
+		}
+	}
+
+	function _get_classname() {
+		// offset has higher priority than direction
+		if(!options.offset) {
+			if(options.direction) {
+				return 'tooltipsy' + options.direction;
+			}
+			else {
+				return 'tooltipsyright';
+			}
+		}
+
+		if(options.offset[0] === 0) {
+			if(options.offset[1] > 0)
+				return 'tooltipsybottom';
+			else
+				return 'tooltipsytop';
+		}
+
+		if(options.offset[1] === 0) {
+			if(options.offset[0] > 0)
+				return 'tooltipsyright';
+			else
+				return 'tooltipsyleft';
+		}
+	}
+
+	return $(elem)
+		.addClass('error')
+		.tooltipsy({
+			alignTo: options.alignTo || 'element',
+			offset: _get_offset(),
+			className: _get_classname(),
+			content: message instanceof Error
+							? message.originalMessage || message.message 
+							: message,
+			hideEvent: options.hideEvent || 'input'
+		})
+		.on(options.hideEvent || 'input', function() {
+			$(elem).data('tooltipsy').destroy();
+		})
+		.data('tooltipsy').show();
+};
 
 QK.AppRouter = Backbone.Router.extend({
 	routes: {

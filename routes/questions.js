@@ -83,8 +83,10 @@ function init() {
 	categories = db.collection('categories');
 }
 
-function BadParameterError(msg) {
-	this.message = msg;
+function BadParameterError(field,msg) {
+	this.field = field;
+	this.message = field + ":" + msg;
+	this.originalMessage = msg;
 	this.stack = (new Error()).stack;
 }
 BadParameterError.prototype = new Error();
@@ -154,7 +156,7 @@ function search(username, query, seen, sortby, sortord, limit, page) {
 				// return only the following fields
 				.project({
 					_id: 1,
-					categoryids: 1,
+					categories: 1,
 					ownerid: 1,
 					title: 1,
 					timelimit: 1,
@@ -488,7 +490,7 @@ function evaluate(username,qid,attempt) {
 
 			// trying to submit again, eh?
 			if(seenstatus.attempt !== null) {
-				return reject(new BadParameterError("Can't answer an " +
+				return reject(new BadParameterError("question","Can't answer an " +
 					"already attempted question."));
 			}
 
@@ -536,7 +538,7 @@ function vote(username, qid, type) {
 		type = type.toString();
 
 		if(type !== "upvote" && type !== "downvote") {
-			return reject(new BadParameterError("vote `type` must be either " +
+			return reject(new BadParameterError("vote","vote `type` must be either " +
 				"'upvote' or 'downvote'"));
 		}
 
@@ -552,10 +554,10 @@ function vote(username, qid, type) {
 
 			votes[username] = votes[username] || 0;
 			if(type == "upvote" && votes[username] == 1) {
-				return reject(new BadParameterError("You can upvote only once."));
+				return reject(new BadParameterError("vote","You can upvote only once."));
 			}
 			if(type == "downvote" && votes[username] == -1) {
-				return reject(new BadParameterError("You can downvote only once."));
+				return reject(new BadParameterError("vote","You can downvote only once."));
 			}
 
 			if(type == "upvote") {
@@ -650,7 +652,7 @@ function createquestion(username,title,question,options,
 		// with the id. Otherwise throws an error.
 		function finalthing() {
 			questions.insertOne({
-				categories: qcats.map(x => new ObjectID(x)),
+				categories: qcats,
 				ownerid: username,
 				title: title,
 				question: question,
@@ -677,7 +679,7 @@ function createquestion(username,title,question,options,
 				}
 
 				// phew!
-				resolve(doc._id);
+				resolve(doc.ops[0]);
 			});
 		}
 
@@ -687,12 +689,16 @@ function createquestion(username,title,question,options,
 		// verifying categories
 		var cat_arr = [];
 		if(qcats.length > qconf.MAX_CATEGORIES) {
-			return reject(new BadParameterError("Too many categories for " +
+			return reject(new BadParameterError("categories", "Too many categories for " +
+				"the question."));
+		}
+		if(qcats.length === 0) {
+			return reject(new BadParameterError("categories", "Category is required " +
 				"the question."));
 		}
 
 		for(var i = 0; i < qcats.length; i++)
-			cat_arr.push({ _id: new ObjectID(qcats[i].toString()) });
+			cat_arr.push({ _id: qcats[i].toString() });
 
 		categories.find({ $or: cat_arr }).count(function(err,len) {
 			if(err) {
@@ -701,7 +707,7 @@ function createquestion(username,title,question,options,
 			}
 
 			if(len != cat_arr.length)
-				return reject(new BadParameterError("Invalid category " +
+				return reject(new BadParameterError("categories","Invalid category " +
 					"ids provided."));
 
 			onedone();
@@ -710,7 +716,7 @@ function createquestion(username,title,question,options,
 		// function to verify lengths. 
 		function throwiftoolong(what,howlong,name) {
 			if(what.length > howlong)
-				return reject(new BadParameterError(name + " too long."));
+				return reject(new BadParameterError(name, " Field too long."));
 			else
 				onedone();
 		}
@@ -718,18 +724,18 @@ function createquestion(username,title,question,options,
 		// verifying title,question,each option,explanation
 		// basically all strings.
 
-		throwiftoolong(title,qconf.MAX_TITLE_LENGTH, "Title");
-		throwiftoolong(question,qconf.MAX_QUESTION_LENGTH,"Question");
-		throwiftoolong(options[0],qconf.MAX_OPTION_LENGTH,"Option 1");
-		throwiftoolong(options[1],qconf.MAX_OPTION_LENGTH,"Option 2");
-		throwiftoolong(options[2],qconf.MAX_OPTION_LENGTH,"Option 3");
-		throwiftoolong(options[3],qconf.MAX_OPTION_LENGTH,"Option 4");
-		throwiftoolong(explanation,qconf.MAX_OPTION_LENGTH,"Explanation");
+		throwiftoolong(title,qconf.MAX_TITLE_LENGTH, "title");
+		throwiftoolong(question,qconf.MAX_QUESTION_LENGTH,"question");
+		throwiftoolong(options[0],qconf.MAX_OPTION_LENGTH,"option[0]");
+		throwiftoolong(options[1],qconf.MAX_OPTION_LENGTH,"option[1]");
+		throwiftoolong(options[2],qconf.MAX_OPTION_LENGTH,"option[2]");
+		throwiftoolong(options[3],qconf.MAX_OPTION_LENGTH,"option[3]");
+		throwiftoolong(explanation,qconf.MAX_OPTION_LENGTH,"explanation");
 
 		// verify answer
 		answer = parseInt(answer,10);
-		if(answer < 1 || answer > 4)
-			return reject(new BadParameterError("Answer must be 1,2,3 or 4"));
+		if(!answer || answer < 1 || answer > 4)
+			return reject(new BadParameterError("answer","Answer must be 1,2,3 or 4"));
 		else
 			onedone();
 
@@ -739,7 +745,7 @@ function createquestion(username,title,question,options,
 			if(timelimit > qconf.MAX_TIMELIMIT || 
 				timelimit < qconf.MIN_TIMELIMIT)
 			{
-				return reject(new BadParameterError("Time limit must be between " +
+				return reject(new BadParameterError("timelimit","Time limit must be between " +
 					qconf.MIN_TIMELIMIT + " and " + qconf.MAX_TIMELIMIT));
 			}
 		}
@@ -940,14 +946,14 @@ router.post('/', function(req,res) {
 		qcats = req.body.categories,
 		timelimit = req.body.timelimit;
 
-	// this part is just a hack for testing. Proper input yet to be done.
-	// But the main function that interface with the database work. 
-	options = [ req.body['options[0]'], req.body['options[1]'], req.body['options[2]'], req.body['options[3]'] ];
-	qcats = [ req.body['categories[0]'] ];
+//	options = [ req.body['options[0]'], req.body['options[1]'],
+//				req.body['options[2]'], req.body['options[3]'] ];
+
+//	qcats = req.body.categories.split(",").map(x => x.trim() );
 
 	createquestion(username,title,question,options,answer,
-		explanation,qcats,timelimit).then(function(qid) {
-			res.status(200).end(qid);
+		explanation,qcats,timelimit).then(function(question) {
+			res.status(200).json(question);
 		})
 		.catch(function(err) {
 			if(err instanceof BadParameterError) {
@@ -965,6 +971,8 @@ router.post('/', function(req,res) {
 });
 
 router.get('/ask', function(req, res) {
+	res.render('submitquestion');
+	return;
 	res.render('tmp-ask', { 
 		username: req.session.username, 
 		name: req.session.name 
