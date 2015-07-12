@@ -11,7 +11,8 @@ function getleaderboard(limit,page) {
 
 	return new Promise(function(resolve,reject) {
 		var cur_score = null,
-			rank = 0;
+			rank = 0,
+			samecount = 0;
 		var leaderboard_cursor = 
 			users
 				.find({})
@@ -21,11 +22,14 @@ function getleaderboard(limit,page) {
 				.map(function(doc) {
 					if(doc.score !== cur_score)
 					{
-						doc.rank = ++rank;
+						rank = 1 + rank + samecount;
+						doc.rank = rank;
 						cur_score = doc.score;
+						samecount = 0;
 					}
 					else {
 						doc.rank = rank;
+						samecount++;
 					}
 					var ret = {
 						rank: doc.rank,

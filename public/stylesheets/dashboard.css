@@ -98,6 +98,50 @@ header:after {
 	width: 30%;
 }
 
+.questiontypes {
+	float: left;
+	width: 60%;
+	padding: 0 10px;
+	height: 40px;
+}
+
+.questiontypes a {
+	width: 25%;
+	text-align: center;
+	color: white;
+	display: block;
+	background: rgba(0,0,0,0.3);
+	float: left;
+	height: 40px;
+	line-height: 40px;
+	text-decoration: none;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-weight: bold;
+}
+
+.questiontypes a:hover {
+	background: rgba(0,0,0,0.4);
+}
+
+.questiontypes a.selected {
+	background: rgba(0,0,0,0.6);
+}
+
+.questiontypes a:first-child {
+	border-radius: 10px 0 0 10px;
+}
+
+.questiontypes a:last-child {
+	border-radius: 0 10px 10px 0;
+}
+
+.questiontypes::after {
+	content: "";
+	clear: both;
+}
+
 #top-bar input[type='text'] {
 	display: block;
 	float: left;
@@ -244,6 +288,16 @@ header:after {
 	border-radius: 100px;
 	padding: 8px;
 	border: 2px solid #2561BE;
+}
+
+table tr.empty {
+	text-align: center;
+	font-size: 100px;
+	color: gray;
+}
+
+table tr.empty td {
+	height: 300px;
 }
 
 .curl_effect {

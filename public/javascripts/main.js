@@ -96,15 +96,36 @@ QK.ErrorFactory = function(elem, message, options) {
 
 QK.AppRouter = Backbone.Router.extend({
 	routes: {
-		"(/)": 					"questions",
-		"users(/)": 			"users",
-		"questions/ask(/)": 	"ask",
-		"questions/:id": 		"solveit",
-		"leaderboard(/)": 		"leaderboard"
+		"(/)": 						"toquestions",	// redirect to questions
+		"questions(/)": 			"toquestions",
+		"questions/new(/)": 		"newquestions",
+		"questions/unattempted(/)": "unattemptedquestions",
+		"questions/attempted(/)": 	"attemptedquestions",
+		"questions/yours(/)": 		"yourquestions",
+		"questions/by(/:ownerid)": 	"questionsby",
+		"users(/)": 				"users",
+		"questions/ask(/)": 		"ask",
+		"questions/:id": 			"solveit",
+		"leaderboard(/)": 			"leaderboard"
 	},
-
-	questions: function() {
-		QK.Routes.QuestionsPage.handle();
+	toquestions: function() {
+		Backbone.history.navigate("/questions/new/", true);
+	},
+	newquestions: function() {
+		QK.Routes.QuestionsPage.handle("new");
+	},
+	unattemptedquestions: function() {
+		QK.Routes.QuestionsPage.handle("unattempted");
+	},
+	attemptedquestions: function() {
+		QK.Routes.QuestionsPage.handle("attempted");
+	},
+	yourquestions: function() {
+		Backbone.history.navigate("/questions/by/" + 
+			$("#a-account").html(), true );
+	},
+	questionsby: function(ownerid) {
+		QK.Routes.QuestionsPage.handle("by", ownerid);
 	},
 	users: function() {
 		alert("YO! users!");

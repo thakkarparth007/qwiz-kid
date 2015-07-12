@@ -46,14 +46,15 @@ var SolveItPage = Backbone.View.extend({
 
 				$("#top-bar").html( that.topbarTmpl(data) );
 				$("#page-content").html( that.pagecontentTmpl(data) );
-				if(data.attempt)
+				if(data.attempt !== undefined && data.attempt !== null) {
 					$("#page-solveit").addClass("solved");
+				}
 			},
 			error: function(xhr,textstatus,err) {
 				that.error(null,err);
 			}
 		});
-		this.render();
+		this.renderStaticContent();
 	},
 	error: function(model,err) {
 		alert("Error occured while fetching data from server");
@@ -76,7 +77,7 @@ var SolveItPage = Backbone.View.extend({
 			}
 		});
 	},
-	render: function() {
+	renderStaticContent: function() {
 		this.setElement(document.body);
 
 		$("[id*=tooltipsy]").remove();

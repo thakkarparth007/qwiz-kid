@@ -35,6 +35,7 @@ var LeaderboardPage = Backbone.View.extend({
 	topbarTmpl: 	Handlebars.templates.leaderboard_topbar,
 	pagecontentTmpl:Handlebars.templates.leaderboard_pagecontent,
 	userTmpl: 		Handlebars.templates.leaderboard_entry,
+	emptyTmpl: 		Handlebars.templates.leaderboard_empty,
 
 	events: {
 		
@@ -50,22 +51,25 @@ var LeaderboardPage = Backbone.View.extend({
 		// handle() is called by the main Router.
 		
 		this.listenTo(this.collection, 'add', this.addUser);
-		this.listenTo(this.collection, 'reset', this.resetView);
+		this.listenTo(this.collection, 'reset', this.renderPageContent);
 		this.listenTo(this.collection, 'error', this.error);
 	},
 	handle: function() {
 		if(!this.collection.length)
 			this.collection.fetch({reset: true});
 
-		this.render();
-		this.resetView();
+		this.renderStaticContent();
+		this.renderPageContent();
 	},
-	resetView: function() {
+	renderPageContent: function() {
 		var that = this;
 		$("#top-bar").html(this.topbarTmpl({
 			score: that.collection.score,
 			rank: that.collection.rank
 		}));
+		$("#tbl-leaderboard").append( this.emptyTmpl() );
+		if(this.collection.length)
+			$(".empty").remove();
 		this.collection.forEach(this.addUser,this);
 	},
 	addUser: function(u) {
@@ -75,7 +79,7 @@ var LeaderboardPage = Backbone.View.extend({
 		alert("Error occured while fetching data from server");
 		console.log(err);
 	},
-	render: function() {
+	renderStaticContent: function() {
 		this.setElement(document.body);
 
 		$("[id*=tooltipsy]").remove();

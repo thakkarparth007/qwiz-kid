@@ -230,7 +230,7 @@ var AskPage = Backbone.View.extend({
 		this.listenTo(this.model,'invalid',this.invalid);
 	},
 	handle: function() {
-		this.render();
+		this.renderStaticContent();
 
 		this.$title = $("#txt-question-title");
 		this.$question = $("#txt-question");
@@ -396,7 +396,7 @@ var AskPage = Backbone.View.extend({
 				return 4;
 		}
 	},
-	render: function() {
+	renderStaticContent: function() {
 		this.setElement(document.body);
 
 		$("[id*=tooltipsy]").remove();

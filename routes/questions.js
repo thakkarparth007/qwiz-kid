@@ -127,7 +127,16 @@ function getseen(username) {
 }
 
 // do the search - combined with getseen, answers type 1 queries
-function search(username, query, seen, sortby, sortord, limit, page) {
+//
+// NOTE:
+// 	`ownerid` can be username of the person
+// 				whose questions must be returned
+// 		 can be "" - returns only questions not 
+// 		 		framed ownerid the current user
+// 	
+// 	To get the questions of the current user, one
+// 	must set ownerid = <CURRENT USER NAME>
+function search(username, query, ownerid, seen, sortby, sortord, limit, page) {
 	init();
 	return new Promise(function(resolve,reject) {
 		getseen(username).then(function(seenones) {
@@ -135,6 +144,15 @@ function search(username, query, seen, sortby, sortord, limit, page) {
 			var findquery = {
 				$or: [	{title: query},	{question: query}   ]
 			};
+
+			if(ownerid !== "") {
+				findquery.ownerid = ownerid;
+			}
+			else {
+				findquery.ownerid = {
+					$not: new RegExp("^" + username + "$", "i")
+				};
+			}
 
 			// choose unseen or seen questions based on `seen`
 			if(seen !== true) {
@@ -194,9 +212,6 @@ function search(username, query, seen, sortby, sortord, limit, page) {
 
 				return q;
 			});
-			if(seen) {
-				
-			}
 
 			search_cursor.toArray(function(err,ques) {
 				if(err) {
@@ -809,6 +824,7 @@ router.get('/', function(req, res) {
 	var limit 	= util.clean_limit(Q.limit) || 20;
 	var page 	= util.clean_page(Q.page) || 1;
 	var seen 	= parseInt(Q.seen || "0",10);
+	var ownerid	= Q.ownerid || "";
 
 	var username = req.session.username;
 
@@ -817,7 +833,7 @@ router.get('/', function(req, res) {
 	else
 		seen = false;	// default: unseen
 
-	search(username, searchq.main, seen, sortby, sortord, limit, page)
+	search(username, searchq.main, ownerid, seen, sortby, sortord, limit, page)
 		.then(function(result) {
 			if(view == 'json') {
 				res.json(result);

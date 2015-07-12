@@ -6,6 +6,9 @@ templates['ask_pagecontent'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main"
 templates['ask_topbar'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div class=\"question-title-wrapper\">\n	<input type=\"text\" name=\"title\" id=\"txt-question-title\" placeholder=\"Title of the question...\"> \n	<input type=\"button\" id=\"btn-question-save\" value=\"Save!\">\n</div>\n\n<div id=\"correct-answer-wrapper\">\n	<span>Correct Answer</span>\n	<div id=\"answer-choices-container\">\n		<input id=\"correct-answer\" value=\"Choose\">\n		<div id=\"answers-drop-down\">\n			<div id=\"option-a\">A</div>\n			<div id=\"option-b\">B</div>\n			<div id=\"option-c\">C</div>\n			<div id=\"option-d\">D</div>\n		</div>\n	</div>\n</div>\n\n<div id=\"time-limit-wrapper\">\n	<span>Time Limit</span>\n	<input type=\"number\" id=\"txt-time-limit\" placeholder=\"None\">\n</div>";
 },"useData":true});
+templates['leaderboard_empty'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<tr class=\"empty\">\n	<td colspan=\"4\">\n		Nothing here!\n	</td>\n</tr>";
+},"useData":true});
 templates['leaderboard_entry'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
 
@@ -68,11 +71,14 @@ templates['questions_QuestionEntry'] = template({"1":function(depth0,helpers,par
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.categories : depth0),{"name":"each","hash":{},"fn":this.program(5, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "	</td>\n</tr>";
 },"useData":true});
+templates['questions_empty'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<tr class=\"empty\">\n	<td colspan=\"6\">\n		Nothing here!\n	</td>\n</tr>";
+},"useData":true});
 templates['questions_pagecontent'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<table id=\"tbl-questions\" class=\"transition-children\">\n	<tr id=\"tbl-questions-header\">\n		<th id=\"th-question-title\">Title</th>\n		<th id=\"th-votes\">Votes</th>\n		<th id=\"th-success-ratio\">Success Ratio</th>\n		<th id=\"th-fastest\">Fastest</th>\n		<th id=\"th-question-setter\">Setter</th>\n		<th id=\"th-categories\">Categories</th>\n	</tr>\n</table>";
 },"useData":true});
 templates['questions_topbar'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div class=\"search-wrapper transition-children\">\n	<input type=\"text\" id=\"txt-search-questions\" placeholder=\"Search Questions...\"> \n	<input type=\"button\" id=\"btn-search-questions\" value=\"Search\">\n</div>";
+    return "<div class=\"search-wrapper transition-children\">\n	<input type=\"text\" id=\"txt-search-questions\" placeholder=\"Search Questions...\"> \n	<input type=\"button\" id=\"btn-search-questions\" value=\"Search\">\n</div>\n\n<div class=\"questiontypes transition-children\">\n	<a id=\"qtype-new\" href=\"/questions/new\">New</a>\n	<a id=\"qtype-unattempted\" href=\"/questions/unattempted\">Seen &amp; Unattempted</a>\n	<a id=\"qtype-attempted\" href=\"/questions/attempted\">Attempted</a>\n	<a id=\"qtype-yours\" href=\"/questions/yours\">Your creations</a>\n</div>";
 },"useData":true});
 templates['solveit_pagecontent'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;

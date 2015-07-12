@@ -23,6 +23,9 @@ module.exports =
 		// email
 		// nothing
 		
+		// name
+		"MAX_NAME_LENGTH": 40,
+		
 		// college
 		"MAX_COLLEGE_LENGTH": 100,
 
